@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototype Sistem Aspirasi Forum Anak Kota Kendari</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f5f1; --panel:#ffffff; --ink:#1d2433; --muted:#5d6577; --line:#e3e1da;
+  --brand:#0f766e; --brand-soft:#e3f2ef; --accent:#e8833a; --accent-soft:#fdeee2;
+  --warn:#b45309; --warn-soft:#fef3c7; --danger:#b42318; --danger-soft:#fde8e6;
+  --ok:#15803d; --ok-soft:#e5f5ea; --radius:12px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.55}
+button,input,select,textarea{font:inherit;color:inherit}
+header{background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.topbar{max-width:1180px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700}
+.logo .mark{width:34px;height:34px;border-radius:10px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:13px;letter-spacing:.5px}
+.logo small{display:block;font-weight:500;color:var(--muted);font-size:12px}
+.spacer{flex:1}
+.role{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.role select{padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;font-weight:600;color:var(--ink)}
+nav{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;gap:4px;overflow-x:auto}
+nav button{border:0;background:none;padding:10px 14px;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;cursor:pointer;white-space:nowrap}
+nav button.on{color:var(--brand);border-bottom-color:var(--brand)}
+.notice{background:var(--accent-soft);color:#7a3f12;font-size:12.5px;text-align:center;padding:6px 12px}
+main{max-width:1180px;margin:0 auto;padding:24px 20px 60px}
+h1{font-size:22px;margin:0 0 4px}
+h2{font-size:16px;margin:0 0 12px}
+h3{font-size:14px;margin:0 0 8px}
+.sub{color:var(--muted);margin:0 0 20px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:860px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.tile .n{font-size:28px;font-weight:700}
+.tile .l{color:var(--muted);font-size:13px}
+.btn{border:1px solid var(--line);background:#fff;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:600}
+.btn:hover{border-color:#c9c6bc}
+.btn.pri{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.acc{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.dan{color:var(--danger);border-color:#f2c1bc}
+.btn.sm{padding:5px 10px;font-size:13px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+label.f{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin:10px 0 4px}
+input[type=text],input[type=date],select.in,textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff}
+textarea{resize:vertical;min-height:90px}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top;font-size:15px}
+th{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+tr.click{cursor:pointer}tr.click:hover td{background:#faf9f6}
+.badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;background:#eef0f3;color:#3b4252;white-space:nowrap}
+.b-new{background:#e8eefc;color:#1e40af}.b-info{background:var(--warn-soft);color:var(--warn)}
+.b-ver{background:var(--brand-soft);color:var(--brand)}.b-pantau{background:var(--accent-soft);color:#9a4a12}
+.b-ok{background:var(--ok-soft);color:var(--ok)}.b-no{background:#eef0f3;color:#525a69}
+.b-sens{background:var(--danger-soft);color:var(--danger)}
+.muted{color:var(--muted)}.small{font-size:14px}
+.alert{border-radius:10px;padding:10px 12px;font-size:13px;margin:10px 0}
+.alert.warn{background:var(--warn-soft);color:#78350f}.alert.info{background:var(--brand-soft);color:#134e4a}.alert.dan{background:var(--danger-soft);color:#7a1a12}
+.bar{height:8px;border-radius:99px;background:#eceae4;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--brand)}
+.kl-row{display:grid;grid-template-columns:1fr 70px;gap:8px;align-items:center;margin:8px 0}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.thumbs img{width:84px;height:84px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.timeline{list-style:none;margin:0;padding:0}
+.timeline li{padding:0 0 12px 18px;border-left:2px solid var(--line);position:relative;margin-left:5px}
+.timeline li:before{content:'';position:absolute;left:-6px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--brand)}
+.sec{margin-top:16px}
+.lock{padding:30px;text-align:center;color:var(--muted)}
+/* chat */
+.chat{max-width:720px;margin:0 auto;display:flex;flex-direction:column;height:calc(100vh - 190px);min-height:560px}
+.chat-head{background:var(--brand);color:#fff;padding:14px 18px;border-radius:var(--radius) var(--radius) 0 0}
+.chat-head b{display:block}
+.chat-body{flex:1;overflow-y:auto;background:#fff;border-left:1px solid var(--line);border-right:1px solid var(--line);padding:18px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:82%;padding:10px 14px;border-radius:14px;white-space:pre-wrap;font-size:15.5px}
+.msg.bot{background:#f0efe9;align-self:flex-start;border-bottom-left-radius:4px}
+.msg.me{background:var(--brand);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.msg.me img{width:120px;height:120px;object-fit:cover;border-radius:8px;margin-top:6px;margin-right:6px}
+.chat-foot{background:#fff;border:1px solid var(--line);border-radius:0 0 var(--radius) var(--radius);padding:12px}
+.chat-foot textarea{min-height:150px;font-size:13.5px}
+.tiny{font-size:13px;color:var(--muted)}
+.modal-bg{position:fixed;inset:0;background:rgba(20,24,33,.45);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal-bg.on{display:flex}
+.modal{background:#fff;border-radius:14px;max-width:620px;width:100%;max-height:90vh;overflow:auto;padding:20px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1d2433;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;display:none;z-index:60}
+.toast.on{display:block}
+.ai-tag{font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:2px 7px;border-radius:6px;margin-left:6px;vertical-align:middle}
+.filters{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+@media(max-width:860px){.filters{grid-template-columns:1fr 1fr}}
+.kv{display:grid;grid-template-columns:140px 1fr;gap:4px 10px;font-size:13.5px}
+.kv dt{color:var(--muted)}.kv dd{margin:0}
+.lap-tiles .tile{border:1px solid var(--line);border-radius:10px;padding:12px}
+.kop{border-bottom:2px solid var(--brand);padding-bottom:12px}
+.lap-item{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px}
+.lap-item .hd{display:flex;gap:8px;align-items:flex-start;justify-content:space-between}
+.lap-item .kv{grid-template-columns:150px 1fr;margin-top:8px}
+.lap-item .thumbs img{width:120px;height:90px}
+@media print{
+ @page{size:A4;margin:16mm}
+ body{background:#fff;font-size:12px}
+ header,.notice,.no-print,.toast,.modal-bg{display:none!important}
+ main{padding:0;max-width:none}
+ #laporan{border:0;padding:0}
+ table{page-break-inside:auto} tr{page-break-inside:avoid}
+ h2{page-break-after:avoid;font-size:14px}
+ th,td{font-size:11px;padding:5px 6px}
+ .small{font-size:10.5px}.tiny{font-size:10px}
+ .badge{border:1px solid #ccc}
+ .lap-tiles{display:grid;grid-template-columns:repeat(4,1fr)}
+ .lap-item{page-break-inside:avoid;break-inside:avoid}
+ .lap-item .thumbs img{width:110px;height:82px}
+}
+.textbox{background:#faf9f6;border:1px solid var(--line);border-radius:8px;padding:10px 12px;white-space:pre-wrap;font-size:13.5px}
+</style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div class="logo"><div class="mark">FAK</div><div>Aspirasi Fantari<small>Forum Anak Kota Kendari</small></div></div>
+    <div class="spacer"></div>
+    <div class="role">Coba sebagai
+      <select id="roleSel">
+        <option value="anak">Anak (pengunjung)</option>
+        <option value="aisyah">Aisyah · Pengurus</option>
+        <option value="nadia">Nadia · Ketua (Pengurus + Admin)</option>
+        <option value="bima">Bima · Sekretaris (Pengurus + Admin)</option>
+        <option value="dewi">Kak Dewi · Fasilitator</option>
+      </select>
+    </div>
+    <div id="modeBox"></div>
+    <button class="btn sm" data-action="reset">Reset data contoh</button>
+  </div>
+  <nav id="nav"></nav>
+</header>
+<div class="notice">Prototype uji coba: semua data adalah contoh fiktif, dan fitur AI masih disimulasikan dengan aturan kata kunci (bukan model asli).</div>
+<main id="app"></main>
+<div class="modal-bg" id="modalBg"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+const KEC=['Abeli','Baruga','Kadia','Kambu','Kendari','Kendari Barat','Mandonga','Nambo','Poasia','Puuwatu','Wua-Wua'];
+const KLASTER=[
+ {id:1,nama:'Klaster I',judul:'Hak Sipil dan Kebebasan',kw:['akta','kelahiran','identitas','kartu identitas anak','forum anak','partisipasi','pendapat','suara anak','informasi','musrenbang','dilibatkan','kelurahan']},
+ {id:2,nama:'Klaster II',judul:'Lingkungan Keluarga dan Pengasuhan Alternatif',kw:['keluarga','orang tua','pengasuhan','menikah','nikah','perkawinan','panti','puspaga','konseling','asuh']},
+ {id:3,nama:'Klaster III',judul:'Kesehatan Dasar dan Kesejahteraan',kw:['kesehatan','puskesmas','posyandu','gizi','stunting','air bersih','sanitasi','jamban','rokok','imunisasi','sampah','sakit','obat']},
+ {id:4,nama:'Klaster IV',judul:'Pendidikan, Pemanfaatan Waktu Luang, dan Kegiatan Budaya',kw:['sekolah','guru','belajar','pendidikan','taman','bermain','lapangan','olahraga','seni','budaya','perpustakaan','taman baca','buku','beasiswa','lampu jalan','rute','les']},
+ {id:5,nama:'Klaster V',judul:'Perlindungan Khusus',kw:['kekerasan','bully','perundungan','dipukul','eksploitasi','pekerja anak','narkoba','disabilitas','pelecehan','korban','bencana','anak jalanan','diancam']}
+];
+const STATUS=['Diterima','Perlu Informasi','Terverifikasi','Disampaikan','Dalam Proses','Sebagian Terlaksana','Terlaksana','Belum Dapat Ditindaklanjuti','Diarsipkan'];
+const STATUS_DESC={
+ 'Diterima':'Aspirasi masuk, belum diperiksa.',
+ 'Perlu Informasi':'Isi kurang jelas, pengirim sedang ditanya.',
+ 'Terverifikasi':'Layak diproses, klaster sudah dikonfirmasi.',
+ 'Disampaikan':'Sudah disampaikan di Musrenbang atau ke DP3A.',
+ 'Dalam Proses':'Ada informasi bahwa aspirasi sedang ditindaklanjuti.',
+ 'Sebagian Terlaksana':'Sebagian sudah terwujud.',
+ 'Terlaksana':'Sudah terwujud, ada bukti sesuai jenisnya.',
+ 'Belum Dapat Ditindaklanjuti':'Ada penjelasan bahwa belum bisa dilaksanakan.',
+ 'Diarsipkan':'Duplikat, tidak relevan, atau sudah digabung.'
+};
+const PANTAU=['Disampaikan','Dalam Proses','Sebagian Terlaksana'];
+const BADGE={'Diterima':'b-new','Perlu Informasi':'b-info','Terverifikasi':'b-ver','Disampaikan':'b-pantau','Dalam Proses':'b-pantau','Sebagian Terlaksana':'b-pantau','Terlaksana':'b-ok','Belum Dapat Ditindaklanjuti':'b-no','Diarsipkan':'b-no'};
+const TINGKAT=['Musrenbang Kecamatan','Musrenbang Kota','Disampaikan langsung ke DP3A','Audiensi / rapat dengan pemerintah','Surat resmi Forum Anak'];
+const USERS={anak:'Anak',pengurus:'Aisyah (Pengurus, contoh)',admin:'Nadia (Ketua, contoh)',fasilitator:'Kak Dewi (Fasilitator, contoh)'};
+const pihakOpts=(tingkat,kec)=>tingkat==='Musrenbang Kecamatan'?[`Kecamatan ${kec||'[nama]'}`,'DP3A Kota Kendari']:['DP3A Kota Kendari'];
+const JENIS=['Fisik','Kelembagaan','Program/Kebijakan'];
+const ASAL=['Forum Anak Kelurahan/Kecamatan (didampingi pengurus)','Anak di kecamatan (dijaring langsung pengurus)','Kotak aspirasi website'];
+const BATAS_HARI=30;
+const STORE='fantari-prototype-v7';
+
+const TEMPLATE=`Nama: \nAsal sekolah / kelurahan: \nKecamatan: \nKontak (WA) yang bisa dihubungi: \nCeritakan masalahnya: \nUsulanmu: `;
+
+/* ---------- utilities ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const iso=d=>d.toISOString().slice(0,10);
+const today=()=>iso(new Date());
+const daysAgo=n=>{const d=new Date();d.setDate(d.getDate()-n);return iso(d)};
+const diff=a=>Math.floor((Date.parse(today())-Date.parse(a))/864e5);
+const fmt=a=>{if(!a)return'-';const m=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];return `${Number(a.slice(8))} ${m[Number(a.slice(5,7))-1]} ${a.slice(0,4)}`};
+const cap=s=>s?s.charAt(0).toUpperCase()+s.slice(1):s;
+const low=s=>s?s.charAt(0).toLowerCase()+s.slice(1):s;
+const endP=s=>/[.!?]$/.test(s)?s:s+'.';
+const firstSent=s=>{s=(s||'').trim();const m=s.match(/^.*?[.!?](\s|$)/);return (m?m[0]:s).trim()};
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove('on'),2400)}
+function modal(html){$('#modal').innerHTML=html;$('#modalBg').classList.add('on')}
+function closeModal(){$('#modalBg').classList.remove('on')}
+
+/* ---------- data ---------- */
+const JENIS_KEG=['Musrenbang Kecamatan','Musrenbang Kota','Audiensi / rapat dengan pemerintah','Penjaringan aspirasi','Kegiatan lainnya'];
+const IZIN=['Belum jelas (internal saja)','Sudah ada izin publikasi','Tidak boleh dipublikasikan'];
+function seedKeg(){return [
+ {id:'KEG-001',nama:'Musrenbang Kecamatan Kambu',jenis:'Musrenbang Kecamatan',tanggal:daysAgo(45),kecamatan:'Kambu',lokasi:'Aula Kantor Camat Kambu (contoh)',peserta:'3 pengurus Fantari, 5 anak Forum Anak Kecamatan',catatan:'Aspirasi lampu jalan masuk usulan prioritas kecamatan.',izin:IZIN[0],foto:[],dokumen:[{nama:'Notulen Musrenbang Kambu (contoh).pdf'},{nama:'Daftar hadir (contoh).pdf'}],aspirasi:['ASP-001'],oleh:'Pengurus (contoh)'},
+ {id:'KEG-002',nama:'Musrenbang Kota Kendari',jenis:'Musrenbang Kota',tanggal:daysAgo(70),kecamatan:'',lokasi:'Kota Kendari (contoh)',peserta:'Pengurus inti Fantari',catatan:'Fantari menyampaikan aspirasi pembentukan Forum Anak Kelurahan.',izin:IZIN[1],foto:[],dokumen:[{nama:'Bahan paparan Fantari (contoh).pdf'}],aspirasi:['ASP-002'],oleh:'Pengurus inti (contoh)'}
+]}
+const ilus=(teks,warna)=>'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="240" height="180"><rect width="240" height="180" fill="${warna}"/><text x="120" y="86" font-family="sans-serif" font-size="15" fill="#fff" text-anchor="middle">${teks}</text><text x="120" y="108" font-family="sans-serif" font-size="11" fill="#fff" text-anchor="middle">(gambar contoh)</text></svg>`);
+function seed(){
+ const mk=(o)=>Object.assign({foto:[],klasterAI:null,klaster:null,ringkas:'',rapikan:'',final:'',sensitif:false,perluRapikan:false,jenisTL:'',penyampaian:[],tindakLanjut:[],catatanFasil:[],followup:[],pj:'',riwayat:[]},o);
+ return {seq:8,kseq:2,kegiatan:seedKeg(),items:[
+  mk({id:'ASP-001',prioritas:true,foto:[ilus('Lampu jalan mati','#55607a')],sumber:'pengurus',asal:ASAL[1],nama:'Perwakilan anak SMP (contoh)',sekolah:'Kel. Lalolara',kecamatan:'Kambu',kontak:'',masalah:'Jalan menuju sekolah di dekat SMP gelap saat sore dan malam karena lampu jalan banyak yang mati. Anak-anak yang pulang les merasa takut.',usulan:'Lampu jalan di rute menuju sekolah diperbaiki dan ditambah.',dibuat:daysAgo(60),klaster:4,status:'Disampaikan',jenisTL:'Fisik',
+   penyampaian:[{tingkat:'Musrenbang Kecamatan',tanggal:daysAgo(45),lokasi:'Kecamatan Kambu',penyampai:'Pengurus (contoh)',peran:'Menyampaikan langsung',catatan:'Dicatat dalam usulan prioritas kecamatan.',pihak:'Kecamatan Kambu',instansi:''}],
+   riwayat:[{t:daysAgo(60),s:'Diterima',oleh:'Pengurus',c:'Diinput dari penjaringan aspirasi.'},{t:daysAgo(55),s:'Terverifikasi',oleh:'Admin',c:''},{t:daysAgo(45),s:'Disampaikan',oleh:'Pengurus',c:'Musrenbang Kecamatan Kambu.'}]}),
+  mk({id:'ASP-002',prioritas:true,sumber:'pengurus',asal:ASAL[0],nama:'Forum Anak Kecamatan Abeli (contoh)',sekolah:'',kecamatan:'Abeli',kontak:'',masalah:'Belum semua kelurahan di Kecamatan Abeli memiliki Forum Anak Kelurahan, sehingga suara anak di kelurahan tidak terwadahi.',usulan:'Dibentuk Forum Anak Kelurahan di setiap kelurahan dengan SK resmi.',dibuat:daysAgo(120),klaster:1,status:'Sebagian Terlaksana',jenisTL:'Kelembagaan',
+   penyampaian:[{tingkat:'Musrenbang Kecamatan',tanggal:daysAgo(100),lokasi:'Kecamatan Abeli',penyampai:'Pengurus (contoh)',peran:'Mendampingi Forum Anak Kecamatan',catatan:'',pihak:'Kecamatan Abeli',instansi:''},{tingkat:'Musrenbang Kota',tanggal:daysAgo(70),lokasi:'Kota Kendari',penyampai:'Pengurus inti (contoh)',peran:'Menyampaikan langsung',catatan:'Diterima sebagai catatan DP3A.',pihak:'DP3A Kota Kendari',instansi:'Bagian Pemerintahan / kelurahan'}],pj:'Nadia (Ketua, contoh)',
+   tindakLanjut:[{tanggal:daysAgo(10),info:'Informasi dari DP3A: Forum Anak Kelurahan sudah terbentuk di 2 kelurahan.',bukti:'SK pembentukan 2 Forum Anak Kelurahan (contoh)',foto:[ilus('Pengukuhan Forum Anak','#2f7d6d')]}],
+   riwayat:[{t:daysAgo(120),s:'Diterima',oleh:'Pengurus',c:''},{t:daysAgo(115),s:'Terverifikasi',oleh:'Admin',c:''},{t:daysAgo(100),s:'Disampaikan',oleh:'Pengurus',c:'Musrenbang Kecamatan Abeli.'},{t:daysAgo(10),s:'Sebagian Terlaksana',oleh:'Pengurus',c:'2 kelurahan sudah membentuk Forum Anak.'}]}),
+  mk({id:'ASP-003',sumber:'website',asal:ASAL[2],nama:'Rara (contoh)',sekolah:'SD di Kel. Puuwatu',kecamatan:'Puuwatu',kontak:'0812-0000-0003',masalah:'di dekat rumah kami tidak ada taman baca, jadi kalau libur kami cuma main hp aja dan bosan',usulan:'ada taman baca atau perpustakaan kecil di kelurahan yang buka sore hari',dibuat:daysAgo(2),status:'Diterima',
+   riwayat:[{t:daysAgo(2),s:'Diterima',oleh:'Sistem',c:'Masuk dari kotak aspirasi website.'}]}),
+  mk({id:'ASP-004',sumber:'website',asal:ASAL[2],nama:'Anonim (contoh)',sekolah:'SMP di Poasia',kecamatan:'Poasia',kontak:'0812-0000-0004',masalah:'Ada teman di kelas yang sering dibully dan pernah dipukul oleh kakak kelas. Dia takut lapor ke guru.',usulan:'Sekolah punya tempat lapor yang aman dan ada sosialisasi anti perundungan.',dibuat:daysAgo(6),klaster:5,status:'Terverifikasi',sensitif:true,
+   catatanFasil:[{t:daysAgo(5),c:'Fasilitator sudah dihubungi; rujukan ke UPTD PPA sedang dikoordinasikan (contoh).'}],
+   riwayat:[{t:daysAgo(6),s:'Diterima',oleh:'Sistem',c:''},{t:daysAgo(5),s:'Terverifikasi',oleh:'Admin',c:'Ditandai sensitif, fasilitator diberi tahu.'}]}),
+  mk({id:'ASP-005',prioritas:true,sumber:'pengurus',asal:ASAL[1],nama:'Perwakilan remaja (contoh)',sekolah:'Kel. Mandonga',kecamatan:'Mandonga',kontak:'',masalah:'Belum ada posyandu remaja di kelurahan, padahal remaja butuh informasi kesehatan dan gizi.',usulan:'Dibentuk posyandu remaja yang dikelola bersama puskesmas.',dibuat:daysAgo(200),klaster:3,status:'Terlaksana',jenisTL:'Program/Kebijakan',
+   penyampaian:[{tingkat:'Musrenbang Kecamatan',tanggal:daysAgo(180),lokasi:'Kecamatan Mandonga',penyampai:'Pengurus (contoh)',peran:'Menyampaikan langsung',catatan:'',pihak:'Kecamatan Mandonga',instansi:'Puskesmas'}],
+   tindakLanjut:[{tanggal:daysAgo(40),info:'Posyandu remaja berjalan setiap bulan bersama puskesmas.',bukti:'Foto kegiatan dan surat dari puskesmas (contoh)',foto:[ilus('Posyandu remaja','#a0573a'),ilus('Surat puskesmas','#6b5b95')]}],
+   riwayat:[{t:daysAgo(200),s:'Diterima',oleh:'Pengurus',c:''},{t:daysAgo(195),s:'Terverifikasi',oleh:'Admin',c:''},{t:daysAgo(180),s:'Disampaikan',oleh:'Pengurus',c:''},{t:daysAgo(40),s:'Terlaksana',oleh:'Pengurus',c:'Bukti diunggah.'}]}),
+  mk({id:'ASP-006',sumber:'website',asal:ASAL[2],nama:'Dimas (contoh)',sekolah:'',kecamatan:'Baruga',kontak:'0812-0000-0006',masalah:'tolong diperbaiki',usulan:'',dibuat:daysAgo(4),status:'Perlu Informasi',
+   riwayat:[{t:daysAgo(4),s:'Diterima',oleh:'Sistem',c:''},{t:daysAgo(3),s:'Perlu Informasi',oleh:'Admin',c:'Tidak jelas apa yang perlu diperbaiki dan di mana.'}]}),
+  mk({id:'ASP-007',prioritas:true,sumber:'pengurus',asal:ASAL[0],nama:'Forum Anak Kelurahan Kadia (contoh)',sekolah:'',kecamatan:'Kadia',kontak:'',masalah:'Lapangan bermain di kelurahan rusak dan sering tergenang air, sehingga anak-anak tidak bisa bermain dan berolahraga dengan aman.',usulan:'Lapangan diperbaiki dan dibuat saluran air.',dibuat:daysAgo(150),klaster:4,status:'Dalam Proses',jenisTL:'Fisik',
+   penyampaian:[{tingkat:'Musrenbang Kecamatan',tanggal:daysAgo(130),lokasi:'Kecamatan Kadia',penyampai:'Pengurus (contoh)',peran:'Mendampingi Forum Anak Kecamatan',catatan:'',pihak:'Kecamatan Kadia',instansi:''},{tingkat:'Musrenbang Kota',tanggal:daysAgo(95),lokasi:'Kota Kendari',penyampai:'Pengurus inti (contoh)',peran:'Menyampaikan langsung',catatan:'',pihak:'DP3A Kota Kendari',instansi:'Dinas PU'}],
+   tindakLanjut:[{tanggal:daysAgo(35),info:'DP3A menyampaikan usulan masuk rencana kerja dinas terkait tahun depan.',bukti:'',foto:[]}],
+   riwayat:[{t:daysAgo(150),s:'Diterima',oleh:'Pengurus',c:''},{t:daysAgo(145),s:'Terverifikasi',oleh:'Admin',c:''},{t:daysAgo(130),s:'Disampaikan',oleh:'Pengurus',c:''},{t:daysAgo(35),s:'Dalam Proses',oleh:'Pengurus',c:'Info dari DP3A.'}]}),
+  mk({id:'ASP-008',sumber:'pengurus',inputOleh:'nadia',asal:ASAL[1],nama:'Perwakilan anak Kel. Nambo (contoh)',sekolah:'Kel. Nambo',kecamatan:'Nambo',kontak:'',masalah:'Masih ada teman-teman kami yang belum punya akta kelahiran, jadi susah waktu mau daftar sekolah.',usulan:'Ada pelayanan akta kelahiran keliling ke kelurahan.',dibuat:daysAgo(1),status:'Diterima',
+   riwayat:[{t:daysAgo(1),s:'Diterima',oleh:'Nadia (Ketua, contoh)',c:'Diinput dalam Mode Pengurus.'}]})
+ ]};
+}
+let state;
+function load(){try{const r=localStorage.getItem(STORE);if(r)return JSON.parse(r)}catch(e){}return null}
+function save(){try{localStorage.setItem(STORE,JSON.stringify(state))}catch(e){}}
+state=load()||seed();
+
+const ACCTS={anak:{nama:'Anak',roles:['anak']},aisyah:{nama:'Aisyah (Pengurus, contoh)',roles:['pengurus']},nadia:{nama:'Nadia (Ketua, contoh)',roles:['pengurus','admin']},bima:{nama:'Bima (Sekretaris, contoh)',roles:['pengurus','admin']},dewi:{nama:'Kak Dewi (Fasilitator, contoh)',roles:['fasilitator']}};
+let acct='anak', mode='admin', role='anak', view='kirim', detailId=null;
+const isMulti=()=>ACCTS[acct].roles.includes('admin');
+function setRole(){role=isMulti()?mode:ACCTS[acct].roles[0]}
+let flt={q:'',kec:'',kl:'',st:''};
+let chatLog=[];
+let draftFoto=[];
+let sendTimes=[];
+let captcha=newCaptcha();
+function newCaptcha(){const a=2+Math.floor(Math.random()*7),b=1+Math.floor(Math.random()*8);return {a,b}}
+
+const get=id=>state.items.find(x=>x.id===id);
+const unscreened=it=>it.sumber==='website'&&['Diterima','Perlu Informasi'].includes(it.status);
+const canSee=it=>!(role==='pengurus'&&(it.sensitif||unscreened(it)));
+const lastActivity=it=>{const ds=[...it.penyampaian.map(p=>p.tanggal),...it.tindakLanjut.map(t=>t.tanggal),...(it.followup||[]).map(f=>f.tanggal)];return ds.length?ds.sort().at(-1):null};
+const pihakNow=it=>{const p=it.penyampaian.at(-1);return p?(p.pihak||pihakOpts(p.tingkat,it.kecamatan)[0]):'-'};
+const lastAsk=it=>(it.followup||[]).at(-1);
+const needAsk=it=>PANTAU.includes(it.status)&&lastActivity(it)&&diff(lastActivity(it))>=BATAS_HARI;
+const klName=k=>{const o=KLASTER.find(x=>x.id===k);return o?`${o.nama} – ${o.judul}`:'Belum dikonfirmasi'};
+const badge=s=>`<span class="badge ${BADGE[s]||''}">${esc(s)}</span>`;
+function addHist(it,s,c){it.riwayat.push({t:today(),s,oleh:roleLabel(),c:c||''})}
+function roleLabel(){return ACCTS[acct].nama}
+
+/* ---------- parsing template ---------- */
+function parseTemplate(text){
+ const map=[['nama','nama'],['asal','sekolah'],['kecamatan','kecamatan'],['kontak','kontak'],['ceritakan','masalah'],['masalah','masalah'],['usulan','usulan']];
+ const out={nama:'',sekolah:'',kecamatan:'',kontak:'',masalah:'',usulan:''};let cur=null,found=0;
+ text.split(/\r?\n/).forEach(line=>{
+  const m=line.match(/^\s*([^:]{2,45}):\s*(.*)$/);
+  if(m){const key=m[1].toLowerCase();const hit=map.find(([p])=>key.startsWith(p));if(hit){cur=hit[1];found++;out[cur]=(m[2]||'').trim();return}}
+  if(cur&&line.trim())out[cur]+=(out[cur]?' ':'')+line.trim();
+ });
+ const kec=KEC.find(k=>out.kecamatan&&out.kecamatan.toLowerCase().includes(k.toLowerCase()));
+ if(kec)out.kecamatan=kec;
+ const ok=found>=4&&out.masalah.length>0;
+ return {data:out,ok,kecValid:!!kec};
+}
+
+/* ---------- AI simulation ---------- */
+function classify(it){
+ const t=(it.masalah+' '+it.usulan).toLowerCase();
+ const res=KLASTER.map(k=>{const hits=k.kw.filter(w=>t.includes(w));const h=[...(it.id+k.id)].reduce((a,c)=>a+c.charCodeAt(0),0)%5;return {k:k.id,score:Math.min(0.91,0.16+0.15*hits.length+h/100),hits}}).sort((a,b)=>b.score-a.score);
+ const perluCek=res[0].score<0.4||(res[0].score-res[1].score)<0.06;
+ return {top:res.slice(0,3),perluCek,waktu:today()};
+}
+function aiRingkas(it){
+ const m=firstSent(it.masalah),u=firstSent(it.usulan);
+ return u?`Masalah: ${endP(cap(m))}\nUsulan: ${endP(cap(u))}`:`Masalah: ${endP(cap(m))}`;
+}
+function baku(t){
+ // simulasi sederhana: mengganti kata tidak baku yang umum, tanpa mengubah isi
+ const map=[[/^\s*(kak|kakak|bang)\s*,?\s*/i,''],[/\b(ga|gak|nggak|ngga|enggak)\b/gi,'tidak'],[/\baja\b/gi,'saja'],[/\bbiar\b/gi,'agar'],[/\budah\b/gi,'sudah'],[/\bbanget\b/gi,'sekali'],[/\bpengen\b/gi,'ingin'],[/\bcuma\b/gi,'hanya'],[/\bkalo\b/gi,'kalau'],[/\bhp\b/gi,'HP'],[/\bgimana\b/gi,'bagaimana'],[/\btrus\b/gi,'lalu'],[/\bmain\b/gi,'bermain']];
+ let s=t;map.forEach(([r,v])=>s=s.replace(r,v));return s.replace(/\s+/g,' ').trim();
+}
+function aiRapikan(it){
+ const lok=it.kecamatan?`Kecamatan ${it.kecamatan}`:'Kota Kendari';
+ let s=`Ayah Bunda yang kami hormati, kami anak-anak dari ${lok} ingin menyampaikan aspirasi.\n\n${endP(cap(baku(it.masalah)))}`;
+ if(it.usulan.trim())s+=`\n\nKarena itu, kami mengusulkan agar ${endP(low(baku(it.usulan)))}`;
+ s+=`\n\nTerima kasih, Ayah Bunda, sudah mendengarkan suara kami.`;
+ return s;
+}
+
+/* ---------- navigation ---------- */
+const NAV={
+ anak:[['kirim','Kirim Aspirasi']],
+ pengurus:[['tugas','Tugas Saya'],['input','Input Aspirasi'],['data','Data Aspirasi'],['kegiatan','Arsip Kegiatan']],
+ admin:[['dashboard','Dashboard'],['data','Data Aspirasi'],['kegiatan','Arsip Kegiatan'],['laporan','Laporan']],
+ fasilitator:[['dashboard','Dashboard'],['data','Data Aspirasi'],['kegiatan','Arsip Kegiatan'],['laporan','Laporan']]
+};
+function renderNav(){
+ const parent={detail:'data',kegiatanBaru:'kegiatan',kegiatanDetail:'kegiatan'}[view]||view;
+ $('#modeBox').innerHTML=isMulti()?`<div class="row" style="gap:4px;background:#f0efe9;padding:3px;border-radius:9px"><button class="btn sm ${mode==='admin'?'pri':''}" style="border:0" data-action="mode" data-m="admin">Mode Admin</button><button class="btn sm ${mode==='pengurus'?'pri':''}" style="border:0" data-action="mode" data-m="pengurus">Mode Pengurus</button></div>`:'';
+ $('#nav').innerHTML=NAV[role].map(([k,l])=>`<button class="${parent===k?'on':''}" data-action="go" data-view="${k}">${l}</button>`).join('');
+}
+function render(){
+ renderNav();
+ const v={kirim:vKirim,dashboard:vDash,tugas:vTugas,data:vData,input:vInput,laporan:vLaporan,detail:vDetail,kegiatan:vKeg,kegiatanBaru:vKegBaru,kegiatanDetail:vKegDetail}[view]||vDash;
+ $('#app').innerHTML=v();
+ if(view==='kirim'){const b=$('.chat-body');if(b)b.scrollTop=b.scrollHeight}
+}
+
+/* ---------- view: kirim (anak) ---------- */
+function vKirim(){
+ const msgs=[{who:'bot',t:'Halo! 👋 Ini kotak aspirasi Forum Anak Kota Kendari.\n\nPunya masalah atau usulan untuk kota kita? Isi format di bawah, lalu kirim. Kamu juga boleh lampirkan foto.'},...chatLog];
+ return `<div class="chat">
+  <div class="chat-head"><b>Kotak Aspirasi Anak</b><span class="small">Aspirasimu hanya dibaca Forum Anak Kota Kendari dan fasilitator.</span></div>
+  <div class="chat-body">${msgs.map(m=>`<div class="msg ${m.who}">${esc(m.t)}${(m.foto||[]).map(f=>`<br><img src="${f}" alt="foto lampiran">`).join('')}</div>`).join('')}</div>
+  <form class="chat-foot" id="chatForm">
+   <textarea id="chatText" aria-label="Tulis aspirasi">${esc(TEMPLATE)}</textarea>
+   <div class="thumbs" id="draftThumbs">${draftFoto.map(f=>`<img src="${f}" alt="foto">`).join('')}</div>
+   <div class="row" style="margin-top:8px">
+    <label class="btn sm" style="cursor:pointer">📎 Lampirkan foto<input type="file" id="chatFoto" accept="image/jpeg,image/png" multiple hidden></label>
+    <span class="tiny">Berapa ${captcha.a} + ${captcha.b}?</span>
+    <input type="text" id="captcha" style="width:60px" inputmode="numeric" aria-label="Jawaban hitungan">
+    <div class="spacer"></div>
+    <button class="btn pri" type="submit">Kirim</button>
+   </div>
+   <label class="tiny" style="display:flex;gap:6px;margin-top:8px;align-items:flex-start"><input type="checkbox" id="consent"> Saya setuju aspirasi dan data di atas dibaca oleh Forum Anak Kota Kendari dan fasilitator untuk ditindaklanjuti. Data tidak dipublikasikan.</label>
+   <p class="tiny" style="margin:8px 0 0">Kalau kamu atau temanmu mengalami kekerasan, segera cerita ke orang dewasa yang kamu percaya atau hubungi layanan SAPA 129.</p>
+  </form></div>`;
+}
+async function handleChatSubmit(e){
+ e.preventDefault();
+ const text=$('#chatText').value;
+ if(!$('#consent').checked){toast('Centang persetujuan dulu ya');return}
+ if(Number($('#captcha').value)!==captcha.a+captcha.b){toast('Jawaban hitungan belum tepat');return}
+ const now=Date.now();sendTimes=sendTimes.filter(t=>now-t<60000);
+ if(sendTimes.length>=3){toast('Terlalu banyak kiriman. Coba lagi sebentar lagi.');return}
+ const p=parseTemplate(text);
+ if(!p.data.masalah&&text.trim()===TEMPLATE.trim()){toast('Format masih kosong');return}
+ sendTimes.push(now);
+ const id='ASP-'+String(++state.seq).padStart(3,'0');
+ const it={id,sumber:'website',asal:ASAL[2],nama:p.data.nama,sekolah:p.data.sekolah,kecamatan:p.data.kecamatan,kontak:p.data.kontak,masalah:p.ok?p.data.masalah:text.trim(),usulan:p.ok?p.data.usulan:'',teksAsli:text,foto:draftFoto.slice(),klasterAI:null,klaster:null,ringkas:'',rapikan:'',final:'',sensitif:false,perluRapikan:!p.ok||!p.kecValid,jenisTL:'',penyampaian:[],tindakLanjut:[],catatanFasil:[],followup:[],pj:'',dibuat:today(),status:'Diterima',riwayat:[{t:today(),s:'Diterima',oleh:'Sistem',c:'Masuk dari kotak aspirasi website.'+(!p.ok||!p.kecValid?' Format tidak terbaca lengkap, perlu dirapikan admin.':'')}]};
+ state.items.push(it);save();
+ chatLog.push({who:'me',t:text.trim(),foto:draftFoto.slice()});
+ chatLog.push({who:'bot',t:`Terima kasih! Aspirasimu sudah kami terima dengan nomor ${id}. 🙏\n\nForum Anak akan membacanya, dan kalau perlu penjelasan tambahan, kami akan menghubungimu lewat kontak yang kamu tulis.`});
+ draftFoto=[];captcha=newCaptcha();render();
+}
+function readImages(files){
+ // Re-encode via canvas: removes EXIF metadata (including GPS location)
+ return Promise.all([...files].slice(0,4).map(f=>new Promise(res=>{
+  if(!/^image\/(jpeg|png)$/.test(f.type)||f.size>8e6){res(null);return}
+  const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const s=Math.min(1,1024/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',0.82))};img.onerror=()=>res(null);img.src=r.result};r.readAsDataURL(f);
+ }))).then(a=>a.filter(Boolean));
+}
+
+/* ---------- view: dashboard ---------- */
+function vDash(){
+ const vis=state.items.filter(i=>i.status!=='Diarsipkan');
+ const c=s=>vis.filter(i=>s.includes(i.status)).length;
+ const ask=state.items.filter(i=>needAsk(i)&&canSee(i));
+ const sens=state.items.filter(i=>i.sensitif&&!['Diarsipkan'].includes(i.status));
+ const kl=KLASTER.map(k=>({k,n:vis.filter(i=>i.klaster===k.id).length}));const max=Math.max(1,...kl.map(x=>x.n));
+ return `<h1>Dashboard</h1><p class="sub">Ringkasan aspirasi per hari ini, ${fmt(today())}.</p>
+ <div class="grid g4">
+  <div class="card tile"><div class="n">${vis.length}</div><div class="l">Total aspirasi aktif</div></div>
+  <div class="card tile"><div class="n">${c(['Diterima','Perlu Informasi'])}</div><div class="l">Perlu diperiksa</div></div>
+  <div class="card tile"><div class="n">${c(PANTAU)}</div><div class="l">Sedang dipantau</div></div>
+  <div class="card tile"><div class="n">${c(['Terlaksana'])}</div><div class="l">Terlaksana</div></div>
+ </div>
+ <div class="grid g2 sec">
+  <div class="card"><h2>Kehadiran Forum Anak di Musrenbang Kecamatan ${today().slice(0,4)}</h2>
+   <p class="small muted" style="margin-top:-6px">Dihitung dari penyampaian yang tercatat. Tugas Fantari: memastikan setiap kecamatan punya aspirasi anak yang disampaikan.</p>
+   ${(()=>{const yr=today().slice(0,4);const hadir=KEC.filter(k=>state.kegiatan.some(g=>g.jenis==='Musrenbang Kecamatan'&&g.kecamatan===k&&g.tanggal.startsWith(yr))||state.items.some(i=>i.kecamatan===k&&i.penyampaian.some(p=>p.tingkat==='Musrenbang Kecamatan'&&p.tanggal.startsWith(yr))));
+    return `<div class="row">${KEC.map(k=>`<span class="badge ${hadir.includes(k)?'b-ok':'b-no'}">${hadir.includes(k)?'✓':'○'} ${k}</span>`).join('')}</div><p class="small" style="margin-top:10px"><b>${hadir.length} dari ${KEC.length}</b> kecamatan sudah tercatat. ${ask.length} aspirasi sedang menunggu follow-up pengurus.</p>`})()}
+  </div>
+  <div class="card"><h2>Aspirasi per klaster hak anak</h2>
+   ${kl.map(x=>`<div class="kl-row"><div><div class="small"><b>${x.k.nama}</b> · ${esc(x.k.judul)}</div><div class="bar"><i style="width:${x.n/max*100}%"></i></div></div><div class="small" style="text-align:right">${x.n} aspirasi</div></div>`).join('')}
+   <p class="small muted">${vis.filter(i=>!i.klaster).length} aspirasi belum dikonfirmasi klasternya.</p>
+  </div>
+ </div>
+ ${role==='admin'?(()=>{const q=state.items.filter(i=>['Diterima','Perlu Informasi'].includes(i.status)).sort((a,b)=>a.dibuat.localeCompare(b.dibuat));
+  return `<div class="card sec"><h2>📥 Perlu diperiksa Admin <span class="badge b-new">${q.length}</span></h2><p class="small muted" style="margin-top:-6px">Aspirasi dari website belum terlihat oleh pengurus sampai diverifikasi. Aspirasi yang kamu input sendiri harus diverifikasi Admin lain.</p>
+  ${q.length?`<table><tr><th>Aspirasi</th><th>Sumber</th><th>Status</th><th>Masuk</th></tr>${q.map(i=>`<tr class="click" data-action="open" data-id="${i.id}"><td><b>${i.id}</b><div class="small muted">${esc(firstSent(i.masalah).slice(0,70))}</div></td><td class="small">${i.sumber==='website'?'Website':'Pengurus: '+esc((ACCTS[i.inputOleh]||{}).nama||'-')}${i.inputOleh===acct?' <span class="badge b-info">input kamu</span>':''}</td><td>${badge(i.status)}${i.sensitif?' <span class="badge b-sens">Sensitif</span>':''}</td><td class="small">${fmt(i.dibuat)}</td></tr>`).join('')}</table>`:'<p class="muted">Semua sudah diperiksa.</p>'}</div>`})():''}
+ ${role!=='pengurus'?`<div class="card sec"><h2>⚠️ Aspirasi sensitif <span class="badge b-sens">${sens.length}</span></h2>
+  <p class="small muted" style="margin-top:-6px">Hanya terlihat oleh Admin dan Fasilitator. Penanganan kasus dirujuk ke UPTD PPA, di luar sistem.</p>
+  ${sens.length?`<table><tr><th>Aspirasi</th><th>Kecamatan</th><th>Status</th><th>Catatan fasilitator</th></tr>${sens.map(i=>`<tr class="click" data-action="open" data-id="${i.id}"><td>${i.id}</td><td>${esc(i.kecamatan)}</td><td>${badge(i.status)}</td><td class="small">${i.catatanFasil.length?esc(i.catatanFasil.at(-1).c):'<span class="muted">Belum ada</span>'}</td></tr>`).join('')}</table>`:'<p class="muted">Tidak ada.</p>'}</div>`:''}`;
+}
+
+/* ---------- view: tugas ---------- */
+function vTugas(){
+ const vis=state.items.filter(canSee);
+ const ask=vis.filter(needAsk).sort((a,b)=>diff(lastActivity(b))-diff(lastActivity(a)));
+ const olah=vis.filter(i=>i.status==='Terverifikasi'&&!i.final);
+ const siap=vis.filter(i=>i.status==='Terverifikasi'&&i.final&&!i.penyampaian.length);
+ const ws=role==='admin';
+ const tunggu=vis.filter(i=>['Diterima','Perlu Informasi'].includes(i.status));
+ const mine=role!=='fasilitator';
+ const sec=(icon,title,desc,list,cols)=>`<div class="card sec"><h2>${icon} ${title} <span class="badge">${list.length}</span></h2><p class="small muted" style="margin-top:-6px">${desc}</p>
+  ${list.length?`<table>${cols(null)}${list.map(i=>cols(i)).join('')}</table>`:'<p class="muted">Tidak ada.</p>'}</div>`;
+ return `<h1>${role==='admin'?'Tugas Fantari':'Tugas Saya'}</h1><p class="sub">Apa yang perlu dikerjakan hari ini, ${fmt(today())}. Semua pengurus Fantari melihat daftar yang sama; ambil tugas supaya tidak dikerjakan dua kali.</p>
+ ${sec('🔔','Perlu di-follow up','Sudah ≥ '+BATAS_HARI+' hari tanpa update sejak penyampaian, pertanyaan, atau informasi terakhir.',ask,i=>i?`<tr><td><a href="#" data-action="open" data-id="${i.id}"><b>${i.id}</b></a><div class="small muted">${esc(firstSent(i.masalah).slice(0,70))}</div></td><td>${esc(pihakNow(i))}${i.penyampaian.at(-1).instansi?`<div class="small muted">→ ${esc(i.penyampaian.at(-1).instansi)}</div>`:''}</td><td>${diff(lastActivity(i))} hari</td><td class="small">${i.pj?esc(i.pj):'<span class="muted">Belum ada</span>'}</td><td><div class="row">${mine&&!i.pj?`<button class="btn sm" data-action="claim" data-id="${i.id}">Ambil</button>`:''}${mine?`<button class="btn sm acc" data-action="tplFollow" data-id="${i.id}">Template</button>`:''}</div></td></tr>`:'<tr><th>Aspirasi</th><th>Tanyakan ke</th><th>Tanpa update</th><th>Penanggung jawab</th><th></th></tr>')}
+ ${sec('📝','Perlu diolah','Sudah diverifikasi Admin, belum punya versi final untuk Musrenbang. Pakai asisten Ringkas/Rapikan.',olah,i=>i?`<tr class="click" data-action="open" data-id="${i.id}"><td><b>${i.id}</b></td><td>${esc(firstSent(i.masalah).slice(0,80))}</td><td>${esc(i.kecamatan)}</td></tr>`:'<tr><th>Aspirasi</th><th>Isi</th><th>Kecamatan</th></tr>')}
+ ${sec('📅','Siap disalurkan','Sudah final. Fantari bisa membawanya ke Musrenbang, atau menjembatani langsung ke DP3A, lewat audiensi, atau surat. Tidak wajib menunggu Musrenbang.',siap,i=>i?`<tr class="click" data-action="open" data-id="${i.id}"><td><b>${i.id}</b></td><td>${esc(firstSent(i.masalah).slice(0,80))}</td><td>${esc(i.kecamatan)}</td></tr>`:'<tr><th>Aspirasi</th><th>Isi</th><th>Kecamatan</th></tr>')}
+ ${sec('📥','Menunggu verifikasi Admin','Aspirasi baru dari website atau input pengurus.',tunggu,i=>i?`<tr class="click" data-action="open" data-id="${i.id}"><td><b>${i.id}</b></td><td>${esc(firstSent(i.masalah).slice(0,80))}</td><td>${badge(i.status)}</td></tr>`:'<tr><th>Aspirasi</th><th>Isi</th><th>Status</th></tr>')}`;
+}
+
+/* ---------- view: arsip kegiatan ---------- */
+let kegId=null;
+const kegOf=id=>state.kegiatan.filter(k=>k.aspirasi.includes(id));
+function vKeg(){
+ const list=state.kegiatan.slice().sort((a,b)=>b.tanggal.localeCompare(a.tanggal));
+ return `<div class="row"><div><h1>Arsip Kegiatan</h1><p class="sub" style="margin-bottom:0">Dokumentasi kegiatan Fantari: Musrenbang, penjaringan aspirasi, dan kegiatan lain, beserta aspirasi yang dibawa.</p></div><div class="spacer"></div>${role!=='fasilitator'?'<button class="btn pri" data-action="go" data-view="kegiatanBaru">+ Tambah kegiatan</button>':''}</div>
+ <div class="card sec" style="padding:6px 8px"><table><tr><th>Kegiatan</th><th>Tanggal</th><th>Jenis</th><th>Dokumentasi</th><th>Aspirasi</th></tr>
+ ${list.map(k=>`<tr class="click" data-action="openKeg" data-id="${k.id}"><td><b>${esc(k.nama)}</b><div class="small muted">${k.id} · ${esc(k.lokasi||'-')}</div></td><td>${fmt(k.tanggal)}</td><td class="small">${esc(k.jenis)}${k.kecamatan?`<div class="muted">Kec. ${esc(k.kecamatan)}</div>`:''}</td><td class="small">${k.foto.length} foto · ${k.dokumen.length} dokumen</td><td>${k.aspirasi.length}</td></tr>`).join('')||'<tr><td colspan="5" class="muted">Belum ada kegiatan.</td></tr>'}
+ </table></div>`;
+}
+function vKegBaru(){
+ const asp=state.items.filter(i=>canSee(i)&&i.status!=='Diarsipkan');
+ return `<button class="btn sm" data-action="go" data-view="kegiatan">← Kembali</button>
+ <h1 class="sec">Tambah Kegiatan</h1><p class="sub">Catat kegiatan sekali, lalu tautkan aspirasi yang dibawa ke kegiatan ini.</p>
+ <form class="card" id="kegForm">
+  <div class="grid g3">
+   <div><label class="f">Jenis kegiatan *</label><select class="in" id="kJenis">${JENIS_KEG.map(j=>`<option>${j}</option>`).join('')}</select></div>
+   <div><label class="f">Tanggal *</label><input type="date" id="kTg" value="${today()}"></div>
+   <div><label class="f">Kecamatan</label><select class="in" id="kKec"><option value="">— (tingkat kota)</option>${KEC.map(k=>`<option>${k}</option>`).join('')}</select></div>
+  </div>
+  <div class="grid g2"><div><label class="f">Nama kegiatan *</label><input type="text" id="kNama" placeholder="mis. Musrenbang Kecamatan Poasia"></div><div><label class="f">Tempat</label><input type="text" id="kLok"></div></div>
+  <label class="f">Peserta dari Forum Anak</label><input type="text" id="kPes" placeholder="mis. 2 pengurus Fantari, 6 anak Forum Anak Kecamatan">
+  <label class="f">Catatan / hasil kegiatan</label><textarea id="kCt" style="min-height:60px"></textarea>
+  <div class="grid g2">
+   <div><label class="f">Foto kegiatan</label><input type="file" id="kFoto" accept="image/jpeg,image/png" multiple><p class="tiny">Metadata lokasi foto dihapus otomatis.</p></div>
+   <div><label class="f">Dokumen (notulen, daftar hadir, berita acara)</label><input type="file" id="kDok" accept=".pdf,.doc,.docx,.xls,.xlsx" multiple><p class="tiny">Di prototype hanya nama file yang disimpan.</p></div>
+  </div>
+  <label class="f">Izin publikasi foto</label><select class="in" id="kIzin">${IZIN.map(z=>`<option>${z}</option>`).join('')}</select>
+  <label class="f">Aspirasi yang dibawa / dihasilkan di kegiatan ini</label>
+  <div class="textbox" style="max-height:220px;overflow:auto">${asp.map(i=>`<label style="display:flex;gap:8px;padding:4px 0"><input type="checkbox" class="kAsp" value="${i.id}"><span><b>${i.id}</b> · ${esc(i.kecamatan||'-')} · ${esc(firstSent(i.masalah).slice(0,70))} ${badge(i.status)}</span></label>`).join('')}</div>
+  <label class="small" style="display:flex;gap:8px;margin-top:10px"><input type="checkbox" id="kAuto" checked> Untuk Musrenbang atau audiensi: catat juga sebagai penyampaian pada aspirasi yang ditautkan</label>
+  <div class="row" style="margin-top:12px"><button class="btn pri" type="submit">Simpan kegiatan</button></div>
+ </form>`;
+}
+function vKegDetail(){
+ const k=state.kegiatan.find(x=>x.id===kegId);if(!k)return '<p>Tidak ditemukan.</p>';
+ return `<button class="btn sm" data-action="go" data-view="kegiatan">← Kembali</button>
+ <div class="row sec"><h1 style="margin:0">${esc(k.nama)}</h1><span class="badge">${esc(k.jenis)}</span></div>
+ <p class="sub">${k.id} · ${fmt(k.tanggal)} · ${esc(k.lokasi||'-')} · dicatat oleh ${esc(k.oleh)}</p>
+ <div class="grid g2">
+  <div class="card"><h2>Keterangan</h2><dl class="kv"><dt>Kecamatan</dt><dd>${esc(k.kecamatan||'Tingkat kota')}</dd><dt>Peserta</dt><dd>${esc(k.peserta||'-')}</dd><dt>Izin foto</dt><dd>${esc(k.izin)}</dd></dl>
+   <h3 class="sec">Catatan / hasil</h3><div class="textbox">${esc(k.catatan||'-')}</div></div>
+  <div class="card"><h2>Dokumentasi</h2>
+   ${k.foto.length?`<div class="thumbs">${k.foto.map(f=>`<img src="${f}" alt="foto kegiatan">`).join('')}</div>`:'<p class="muted small">Belum ada foto.</p>'}
+   <h3 class="sec">Dokumen</h3>${k.dokumen.length?`<ul style="margin:0;padding-left:18px">${k.dokumen.map(d=>`<li class="small">📄 ${esc(d.nama)}</li>`).join('')}</ul>`:'<p class="muted small">Belum ada dokumen.</p>'}</div>
+ </div>
+ <div class="card sec"><h2>Aspirasi di kegiatan ini <span class="badge">${k.aspirasi.length}</span></h2>
+  ${k.aspirasi.length?`<table><tr><th>Aspirasi</th><th>Kecamatan</th><th>Status</th></tr>${k.aspirasi.map(get).filter(Boolean).map(i=>`<tr class="click" data-action="open" data-id="${i.id}"><td><b>${i.id}</b><div class="small muted">${canSee(i)?esc(firstSent(i.masalah).slice(0,80)):'Isi dibatasi (sensitif)'}</div></td><td>${esc(i.kecamatan)}</td><td>${badge(i.status)}</td></tr>`).join('')}</table>`:'<p class="muted">Tidak ada aspirasi tertaut.</p>'}</div>`;
+}
+
+/* ---------- view: data ---------- */
+function vData(){
+ const list=state.items.filter(i=>{
+  if(role==='pengurus'&&unscreened(i)&&!i.sensitif)return false;
+  if(flt.kec&&i.kecamatan!==flt.kec)return false;
+  if(flt.kl&&String(i.klaster)!==flt.kl)return false;
+  if(flt.st&&i.status!==flt.st)return false;
+  if(flt.q){const q=flt.q.toLowerCase();if(!(i.id.toLowerCase().includes(q)||(canSee(i)&&(i.masalah+' '+i.usulan).toLowerCase().includes(q))))return false}
+  return true}).sort((a,b)=>b.dibuat.localeCompare(a.dibuat));
+ return `<h1>Data Aspirasi</h1><p class="sub">Arsip semua aspirasi dari kotak aspirasi website dan input pengurus. Klik baris untuk membuka detail.${role==='pengurus'?' Aspirasi baru dari website baru muncul di sini setelah diperiksa Admin.':''}</p>
+ <div class="filters">
+  <input type="text" id="fq" placeholder="Cari nomor atau isi aspirasi" value="${esc(flt.q)}">
+  <select class="in" id="fkec"><option value="">Semua kecamatan</option>${KEC.map(k=>`<option ${flt.kec===k?'selected':''}>${k}</option>`).join('')}</select>
+  <select class="in" id="fkl"><option value="">Semua klaster</option>${KLASTER.map(k=>`<option value="${k.id}" ${flt.kl==String(k.id)?'selected':''}>${k.nama}</option>`).join('')}</select>
+  <select class="in" id="fst"><option value="">Semua status</option>${STATUS.map(s=>`<option ${flt.st===s?'selected':''}>${s}</option>`).join('')}</select>
+ </div>
+ <div class="card" style="padding:6px 8px"><table>
+  <tr><th>Nomor</th><th>Aspirasi</th><th>Kecamatan</th><th>Klaster</th><th>Sumber</th><th>Status</th></tr>
+  ${list.map(i=>`<tr class="click" data-action="open" data-id="${i.id}"><td><b>${i.id}</b><div class="small muted">${fmt(i.dibuat)}</div></td>
+   <td>${canSee(i)?esc(firstSent(i.masalah).slice(0,90)):'<i class="muted">Isi dibatasi (sensitif)</i>'} ${i.sensitif?'<span class="badge b-sens">Sensitif</span>':''} ${i.perluRapikan?'<span class="badge b-info">Perlu dirapikan</span>':''} ${needAsk(i)?'<span class="badge b-pantau">🔔 Tanyakan</span>':''}</td>
+   <td>${esc(i.kecamatan||'-')}</td><td class="small">${i.klaster?KLASTER.find(k=>k.id===i.klaster).nama:'<span class="muted">-</span>'}</td>
+   <td class="small">${i.sumber==='website'?'Website':'Pengurus'}</td><td>${badge(i.status)}</td></tr>`).join('')||'<tr><td colspan="6" class="muted">Tidak ada data.</td></tr>'}
+ </table></div>`;
+}
+
+/* ---------- view: detail ---------- */
+function vDetail(){
+ const it=get(detailId);if(!it)return '<p>Data tidak ditemukan.</p>';
+ if(!canSee(it)){
+  const mine=it.sensitif&&it.sensitifOleh===acct;
+  return `<button class="btn sm" data-action="go" data-view="data">← Kembali</button><div class="card sec lock"><h2>🔒 Akses dibatasi</h2>
+  ${it.sensitif?`<p>${it.id} ditandai sensitif. Hanya Admin dan Fasilitator yang dapat membuka isinya.</p>${mine?`<div class="alert info" style="text-align:left;max-width:520px;margin:12px auto">Kamu menandai aspirasi ini sebagai sensitif pada ${fmt(it.sensitifTgl)}. Fasilitator sudah diberi tahu dan akan menanganinya bersama pihak yang berwenang. Terima kasih sudah melindungi temanmu. 💛</div>`:''}`:`<p>${it.id} masih menunggu pemeriksaan Admin.</p>`}</div>`;
+ }
+ const isAdmin=role==='admin', isPeng=role==='pengurus', isFas=role==='fasilitator';
+ const ownInput=it.inputOleh&&it.inputOleh===acct;
+ const ai=it.klasterAI;
+ return `<div class="row"><button class="btn sm" data-action="go" data-view="data">← Kembali</button></div>
+ <div class="row sec" style="margin-top:12px"><h1 style="margin:0">${it.id}</h1>${badge(it.status)}${it.prioritas?'<span class="badge b-pantau">★ Prioritas</span>':''}${it.sensitif?'<span class="badge b-sens">Sensitif</span>':''}${it.perluRapikan?'<span class="badge b-info">Perlu dirapikan</span>':''}</div>
+ <p class="sub">${it.sumber==='website'?'Dari kotak aspirasi website':'Diinput pengurus'} · ${fmt(it.dibuat)} · <span class="muted">${esc(STATUS_DESC[it.status])}</span></p>
+ ${needAsk(it)?`<div class="alert warn">🔔 Sudah ${diff(lastActivity(it))} hari tanpa update sejak ${fmt(lastActivity(it))}. Saatnya menanyakan perkembangan ke <b>${esc(pihakNow(it))}</b>${it.pj?` (penanggung jawab: ${esc(it.pj)})`:''}. <button class="btn sm acc" data-action="tplFollow" data-id="${it.id}">Buat template pesan</button></div>`:''}
+ ${it.perluRapikan?`<div class="alert info">Format pesan dari website tidak terbaca lengkap. Admin perlu memindahkan identitas dan isi aspirasi ke kolom yang tepat lewat tombol <b>Edit data</b>.</div>`:''}
+
+ <div class="grid g2">
+  <div class="card"><h2>Identitas pengirim</h2><p class="small muted" style="margin-top:-8px">Disimpan terpisah dan <b>tidak dikirim ke modul AI</b>.</p>
+   <dl class="kv"><dt>Nama</dt><dd>${esc(it.nama||'-')}</dd><dt>Asal</dt><dd>${esc(it.sekolah||'-')}</dd><dt>Kecamatan</dt><dd>${esc(it.kecamatan||'-')}</dd><dt>Kontak</dt><dd>${esc(it.kontak||'-')}</dd><dt>Asal aspirasi</dt><dd>${esc(it.asal)}</dd></dl>
+   <div class="row sec">${isAdmin?`<button class="btn sm" data-action="edit" data-id="${it.id}">Edit data</button>`:''}
+    ${!it.sensitif?`<button class="btn sm dan" data-action="askSens" data-id="${it.id}">Tandai sensitif</button>`:(isAdmin||isFas)?`<button class="btn sm" data-action="unSens" data-id="${it.id}">Hapus tanda sensitif</button>`:''}</div>
+   ${it.sensitif&&it.sensitifOleh?`<p class="small muted">Ditandai sensitif oleh ${esc((ACCTS[it.sensitifOleh]||{}).nama||it.sensitifOleh)} · ${fmt(it.sensitifTgl)}</p>`:''}
+   ${it.inputOleh?`<p class="small muted">Diinput oleh ${esc((ACCTS[it.inputOleh]||{}).nama||it.inputOleh)}</p>`:''}
+  </div>
+  <div class="card"><h2>Isi aspirasi</h2>
+   <h3>Masalah</h3><div class="textbox">${esc(it.masalah)}</div>
+   <h3 style="margin-top:10px">Usulan</h3><div class="textbox">${esc(it.usulan||'-')}</div>
+   ${it.foto.length?`<div class="thumbs">${it.foto.map(f=>`<img src="${f}" alt="foto">`).join('')}</div>`:''}
+   ${it.teksAsli?`<details class="sec"><summary class="small">Lihat pesan asli dari website</summary><div class="textbox sec">${esc(it.teksAsli)}</div></details>`:''}
+   ${it.final?`<h3 style="margin-top:12px">Versi final untuk Musrenbang ✅</h3><div class="textbox">${esc(it.final)}</div>`:''}
+  </div>
+ </div>
+
+ <div class="grid g2 sec">
+  <div class="card"><h2>Rekomendasi klaster hak anak <span class="ai-tag">AI · simulasi</span></h2>
+   <p class="small muted" style="margin-top:-8px">Skor adalah kemiripan teks dengan deskripsi klaster, <b>bukan peluang benar</b>. Keputusan tetap di tangan Admin.</p>
+   ${ai?`${ai.top.map((r,ix)=>`<div class="kl-row"><div><div class="small">${ix===0?'<b>':''}${klName(r.k)}${ix===0?'</b>':''}</div><div class="bar"><i style="width:${r.score*100}%;${ix?'opacity:.45':''}"></i></div></div><div class="small" style="text-align:right">${r.score.toFixed(2)}</div></div>`).join('')}
+    ${ai.perluCek?'<div class="alert warn">Skor rendah atau berdekatan: perlu dicek manual.</div>':''}`:'<p class="muted">Belum dijalankan.</p>'}
+   <div class="row sec">${isPeng||isAdmin?`<button class="btn sm" data-action="classify" data-id="${it.id}">${ai?'Jalankan ulang':'Jalankan klasifikasi'}</button>`:''}</div>
+   <label class="f">Klaster terkonfirmasi</label>
+   ${isAdmin?`<div class="row"><select class="in" id="klSel" style="flex:1"><option value="">Pilih klaster…</option>${KLASTER.map(k=>`<option value="${k.id}" ${it.klaster===k.id?'selected':''}>${k.nama} – ${k.judul}</option>`).join('')}</select><button class="btn sm pri" data-action="setKl" data-id="${it.id}">Simpan</button></div>`:`<div>${esc(klName(it.klaster))}</div>`}
+  </div>
+  <div class="card"><h2>Asisten penyusunan aspirasi <span class="ai-tag">AI · simulasi</span></h2>
+   <p class="small muted" style="margin-top:-8px">Hanya bagian masalah dan usulan yang diproses. Hasil wajib diperiksa: tidak boleh menambah fakta atau menghilangkan suara anak.</p>
+   ${isPeng?`<div class="row"><button class="btn sm" data-action="ringkas" data-id="${it.id}">Ringkas</button><button class="btn sm" data-action="rapikan" data-id="${it.id}">Rapikan untuk Musrenbang</button></div>
+   <label class="f">Hasil (bisa diedit)</label><textarea id="aiOut" placeholder="Hasil AI akan muncul di sini">${esc(it.rapikan||it.ringkas||'')}</textarea>
+   <div class="row" style="margin-top:8px"><button class="btn sm pri" data-action="setFinal" data-id="${it.id}">Setujui sebagai versi final</button></div>`:`<p class="muted">Hanya pengurus yang memakai asisten ini.</p>`}
+  </div>
+ </div>
+
+ ${isAdmin?`<div class="card sec"><h2>Verifikasi (Admin)</h2><div class="row">
+   <button class="btn sm pri" data-action="verify" data-id="${it.id}" ${(it.status!=='Diterima'&&it.status!=='Perlu Informasi')||ownInput?'disabled':''}>Verifikasi</button>
+   <button class="btn sm" data-action="needInfo" data-id="${it.id}" ${it.status!=='Diterima'?'disabled':''}>Perlu informasi + template</button>
+   <button class="btn sm dan" data-action="archive" data-id="${it.id}" ${it.status==='Diarsipkan'?'disabled':''}>Arsipkan</button></div>
+   <div class="row" style="margin-top:8px"><button class="btn sm" data-action="togglePrior" data-id="${it.id}">${it.prioritas?'★ Hapus dari aspirasi prioritas':'☆ Jadikan aspirasi prioritas (masuk laporan bagian D)'}</button></div>
+   ${ownInput?'<div class="alert warn">Aspirasi ini kamu input sendiri (Mode Pengurus). Minta Admin lain untuk memverifikasi.</div>':''}
+   <p class="small muted">Verifikasi butuh klaster terkonfirmasi. Arsipkan dipakai untuk duplikat atau aspirasi yang tidak relevan.</p></div>`:''}
+
+ <div class="card sec"><h2>Riwayat penyampaian</h2><p class="small muted" style="margin-top:-8px">Lewat Musrenbang atau dijembatani langsung oleh Fantari (DP3A, audiensi, surat).</p>
+  ${it.penyampaian.length?`<table><tr><th>Saluran</th><th>Tanggal</th><th>Peran Forum Anak</th><th>Follow up ke</th><th>Catatan</th></tr>${it.penyampaian.map(p=>`<tr><td>${esc(p.tingkat)}<div class="small muted">${esc(p.lokasi)}</div></td><td>${fmt(p.tanggal)}</td><td class="small">${esc(p.peran)}</td><td class="small">${esc(p.pihak||'-')}${p.instansi?`<div class="muted">→ ${esc(p.instansi)}</div>`:''}</td><td class="small">${esc(p.catatan||'-')}</td></tr>`).join('')}</table>`:'<p class="muted">Belum disampaikan.</p>'}
+  ${isPeng&&!['Diterima','Perlu Informasi','Diarsipkan'].includes(it.status)?`<details class="sec"><summary class="btn sm" style="display:inline-block">+ Catat penyampaian</summary>
+   <div class="grid g4 sec"><div><label class="f">Saluran penyampaian</label><select class="in" id="pTk">${TINGKAT.map(t=>`<option>${t}</option>`).join('')}</select></div>
+   <div><label class="f">Tanggal</label><input type="date" id="pTg" value="${today()}"></div>
+   <div><label class="f">Lokasi</label><input type="text" id="pLk" value="${it.kecamatan?'Kecamatan '+esc(it.kecamatan):''}"></div>
+   <div><label class="f">Peran</label><select class="in" id="pPr"><option>Menyampaikan langsung</option><option>Mendampingi Forum Anak Kecamatan</option></select></div></div>
+   <div class="grid g2"><div><label class="f">Follow up ke</label><select class="in" id="pPh">${pihakOpts(TINGKAT[0],it.kecamatan).map(o=>`<option>${esc(o)}</option>`).join('')}</select></div>
+   <div><label class="f">Instansi teknis terkait (opsional)</label><input type="text" id="pIn" placeholder="mis. Dinas Lingkungan Hidup, Dinas PU"></div></div>
+   <p class="tiny">Musrenbang Kecamatan → follow up ke kecamatan atau DP3A. Saluran lain → DP3A menjembatani ke instansi terkait.</p>
+   <label class="f">Catatan</label><input type="text" id="pCt" placeholder="Hasil atau respons di forum">
+   <div class="row" style="margin-top:8px"><button class="btn sm pri" data-action="addPenyampaian" data-id="${it.id}">Simpan penyampaian</button></div></details>`:''}
+  ${['Diterima','Perlu Informasi'].includes(it.status)?'<p class="small muted">Aspirasi harus diverifikasi Admin sebelum dicatat penyampaiannya.</p>':''}
+ </div>
+
+ ${kegOf(it.id).length?`<div class="card sec"><h2>Kegiatan terkait</h2><div class="row">${kegOf(it.id).map(k=>`<button class="btn sm" data-action="openKeg" data-id="${k.id}">📁 ${esc(k.nama)} · ${fmt(k.tanggal)}</button>`).join('')}</div></div>`:''}
+
+ ${it.penyampaian.length&&!['Diarsipkan'].includes(it.status)?`<div class="card sec"><h2>Follow up</h2>
+  <div class="row"><span class="small muted">Penanggung jawab:</span> <b>${esc(it.pj||'Belum ada')}</b>
+   ${isPeng&&it.pj!==roleLabel()?`<button class="btn sm" data-action="claim" data-id="${it.id}">${it.pj?'Ambil alih':'Saya yang follow up'}</button>`:''}
+   <span class="small muted">· Tanyakan ke: <b>${esc(pihakNow(it))}</b></span></div>
+  ${it.followup.length?`<ul class="timeline sec">${it.followup.slice().reverse().map(f=>`<li><b>${fmt(f.tanggal)}</b> · ditanyakan ke ${esc(f.pihak)} oleh ${esc(f.oleh)}${f.catatan?`<div class="small">${esc(f.catatan)}</div>`:''}</li>`).join('')}</ul>`:'<p class="muted small sec">Belum pernah ditanyakan.</p>'}
+  ${isPeng?`<details class="sec"><summary class="btn sm" style="display:inline-block">+ Catat sudah ditanyakan</summary>
+   <div class="grid g2 sec"><div><label class="f">Tanggal</label><input type="date" id="fTg" value="${today()}"></div>
+   <div><label class="f">Ditanyakan ke</label><select class="in" id="fPh">${pihakOpts(it.penyampaian.at(-1).tingkat,it.kecamatan).map(o=>`<option ${o===pihakNow(it)?'selected':''}>${esc(o)}</option>`).join('')}</select></div></div>
+   <label class="f">Catatan (mis. dijanjikan kabar minggu depan)</label><input type="text" id="fCt">
+   <div class="row" style="margin-top:8px"><button class="btn sm pri" data-action="logAsk" data-id="${it.id}">Simpan</button></div>
+   <p class="tiny">Kalau sudah ada jawaban berisi perkembangan, catat di bagian Tindak lanjut di bawah.</p></details>`:''}
+ </div>`:''}
+
+ <div class="card sec"><h2>Tindak lanjut dan bukti</h2>
+  <div class="row"><span class="small muted">Jenis tindak lanjut:</span>
+   ${isPeng?`<select class="in" id="jenisSel" style="width:auto">${['',...JENIS].map(j=>`<option ${it.jenisTL===j?'selected':''} value="${j}">${j||'Pilih jenis…'}</option>`).join('')}</select><button class="btn sm" data-action="setJenis" data-id="${it.id}">Simpan</button>`:`<b>${esc(it.jenisTL||'-')}</b>`}</div>
+  <p class="small muted">Fisik → foto sebelum/sesudah · Kelembagaan → SK atau dokumentasi pengukuhan · Program/Kebijakan → surat, notulen, atau informasi DP3A.</p>
+  ${it.tindakLanjut.length?`<ul class="timeline sec">${it.tindakLanjut.slice().reverse().map(t=>`<li><b>${fmt(t.tanggal)}</b> · ${esc(t.info)}${t.bukti?`<div class="small">📎 Bukti: ${esc(t.bukti)}</div>`:'<div class="small muted">Tanpa bukti</div>'}${(t.foto||[]).length?`<div class="thumbs">${t.foto.map(f=>`<img src="${f}" alt="bukti">`).join('')}</div>`:''}</li>`).join('')}</ul>`:'<p class="muted">Belum ada informasi tindak lanjut.</p>'}
+  ${isPeng&&PANTAU.includes(it.status)||isPeng&&it.status==='Terlaksana'?`<details class="sec"><summary class="btn sm" style="display:inline-block">+ Catat informasi tindak lanjut</summary>
+   <div class="grid g2 sec"><div><label class="f">Tanggal informasi</label><input type="date" id="tTg" value="${today()}"></div>
+   <div><label class="f">Ubah status menjadi</label><select class="in" id="tSt">${['Dalam Proses','Sebagian Terlaksana','Terlaksana','Belum Dapat Ditindaklanjuti'].map(s=>`<option ${it.status===s?'selected':''}>${s}</option>`).join('')}</select></div></div>
+   <label class="f">Informasi dari DP3A / hasil pengecekan lapangan</label><textarea id="tIn" style="min-height:60px"></textarea>
+   <label class="f">Keterangan bukti (wajib untuk status Terlaksana)</label><input type="text" id="tBk" placeholder="mis. SK pembentukan, foto sesudah perbaikan">
+   <label class="f">Foto bukti (opsional)</label><input type="file" id="tFt" accept="image/jpeg,image/png" multiple>
+   <div class="row" style="margin-top:8px"><button class="btn sm pri" data-action="addTL" data-id="${it.id}">Simpan tindak lanjut</button></div></details>`:''}
+ </div>
+
+ ${(it.sensitif&&(isFas||isAdmin))?`<div class="card sec"><h2>Catatan fasilitator (rujukan)</h2>
+  ${it.catatanFasil.length?`<ul class="timeline">${it.catatanFasil.map(c=>`<li><b>${fmt(c.t)}</b> · ${esc(c.c)}</li>`).join('')}</ul>`:'<p class="muted">Belum ada.</p>'}
+  ${isFas?`<label class="f">Tambah catatan</label><input type="text" id="fasIn" placeholder="mis. sudah dirujuk ke UPTD PPA"><div class="row" style="margin-top:8px"><button class="btn sm pri" data-action="addFas" data-id="${it.id}">Simpan</button></div>`:''}</div>`:''}
+
+ <div class="card sec"><h2>Template pesan</h2><div class="row">
+  <button class="btn sm acc" data-action="tplFollow" data-id="${it.id}" ${!it.penyampaian.length?'disabled':''}>Tanya perkembangan (Ayah Bunda)</button>
+  <button class="btn sm" data-action="tplInfo" data-id="${it.id}" ${!it.kontak?'disabled':''}>Minta informasi tambahan ke pengirim</button></div>
+  ${!it.kontak?'<p class="small muted">Template ke pengirim butuh kontak.</p>':''}</div>
+
+ <div class="card sec"><h2>Riwayat status</h2><ul class="timeline">${it.riwayat.slice().reverse().map(r=>`<li><b>${esc(r.s)}</b> · ${fmt(r.t)} · <span class="muted">${esc(r.oleh)}</span>${r.c?`<div class="small">${esc(r.c)}</div>`:''}</li>`).join('')}</ul></div>`;
+}
+
+/* ---------- view: input ---------- */
+function vInput(){
+ return `<h1>Input Aspirasi</h1><p class="sub">Untuk aspirasi yang dijaring pengurus di kecamatan atau dari Forum Anak setempat.</p>
+ <form class="card" id="inForm">
+  <div class="grid g3">
+   <div><label class="f">Asal aspirasi</label><select class="in" id="iAsal">${ASAL.slice(0,2).map(a=>`<option>${a}</option>`).join('')}</select></div>
+   <div><label class="f">Kecamatan *</label><select class="in" id="iKec"><option value="">Pilih…</option>${KEC.map(k=>`<option>${k}</option>`).join('')}</select></div>
+   <div><label class="f">Kelurahan / sekolah</label><input type="text" id="iKel"></div>
+  </div>
+  <div class="grid g2">
+   <div><label class="f">Nama / perwakilan</label><input type="text" id="iNama" placeholder="mis. Forum Anak Kelurahan Lepo-Lepo"></div>
+   <div><label class="f">Kontak (opsional)</label><input type="text" id="iKontak"></div>
+  </div>
+  <h2 class="sec">Cerita anak</h2>
+  <p class="small muted" style="margin-top:-8px">Tulis apa adanya, dengan bahasa anak. Tidak perlu rapi: nanti website membantu menyusun kalimatnya.</p>
+  <label class="f">Ceritakan masalahnya *</label><textarea id="iMasalah" placeholder="mis. kak lapangan di dekat rumah kami becek terus kalau hujan, jadi kami ga bisa main bola"></textarea>
+  <label class="f">Apa yang anak inginkan?</label><textarea id="iUsulan" style="min-height:60px" placeholder="mis. lapangannya diperbaiki biar bisa dipakai main"></textarea>
+  <div class="row" style="margin-top:8px"><button class="btn acc" type="button" data-action="susunInput">✨ Bantu susun kalimat untuk pemerintah</button><span class="ai-tag">AI · simulasi</span></div>
+  <label class="f">Draf kalimat untuk pemerintah (bisa diedit)</label><textarea id="iDraf" placeholder="Hasil susunan kalimat muncul di sini"></textarea>
+  <label class="small" style="display:flex;gap:8px;margin-top:6px"><input type="checkbox" id="iFinal"> Draf ini sudah saya periksa dan sesuai maksud anak (simpan sebagai versi final)</label>
+
+  <h2 class="sec">Sudah disampaikan?</h2>
+  <label class="small" style="display:flex;gap:8px"><input type="checkbox" id="iSudah"> Aspirasi ini sudah saya sampaikan (mis. di Musrenbang yang baru saya ikuti)</label>
+  <div class="grid g3">
+   <div><label class="f">Saluran</label><select class="in" id="iSal">${TINGKAT.map(t=>`<option>${t}</option>`).join('')}</select></div>
+   <div><label class="f">Tanggal</label><input type="date" id="iTgS" value="${today()}"></div>
+   <div><label class="f">Tautkan ke kegiatan (opsional)</label><select class="in" id="iKeg"><option value="">— Tidak ada —</option>${state.kegiatan.slice().sort((a,b)=>b.tanggal.localeCompare(a.tanggal)).map(k=>`<option value="${k.id}">${esc(k.nama)} · ${fmt(k.tanggal)}</option>`).join('')}</select></div>
+  </div>
+  <p class="tiny">Admin tetap memverifikasi. Setelah diverifikasi, status langsung menjadi <b>Disampaikan</b> dan pengingat 30 hari berjalan.</p>
+
+  <label class="f">Foto dokumentasi (opsional)</label><input type="file" id="iFoto" accept="image/jpeg,image/png" multiple>
+  <p class="tiny">Pastikan ada izin untuk foto yang menampilkan wajah anak. Metadata lokasi foto dihapus otomatis.</p>
+  <div class="row" style="margin-top:10px"><button class="btn pri" type="submit">Simpan aspirasi</button></div>
+ </form>`;
+}
+
+/* ---------- view: laporan ---------- */
+let lapTahun=null,lapDetail='semua',lapFoto=true;
+function vLaporan(){
+ const years=[...new Set(state.items.map(i=>i.dibuat.slice(0,4)))].sort().reverse();
+ if(!lapTahun||!years.includes(lapTahun))lapTahun=years[0]||today().slice(0,4);
+ const yr=lapTahun;
+ const all=state.items.filter(i=>i.dibuat.startsWith(yr)&&i.status!=='Diarsipkan');
+ const sens=all.filter(i=>i.sensitif);
+ const act=all.filter(i=>!i.sensitif);
+ const cnt=s=>act.filter(i=>s.includes(i.status)).length;
+ const disampaikan=act.filter(i=>i.penyampaian.length).length;
+ const prior=act.filter(i=>i.prioritas);
+ const keg=state.kegiatan.filter(k=>k.tanggal.startsWith(yr)).sort((a,b)=>a.tanggal.localeCompare(b.tanggal));
+ const hadir=k=>keg.some(g=>g.jenis==='Musrenbang Kecamatan'&&g.kecamatan===k)||state.items.some(i=>i.kecamatan===k&&i.penyampaian.some(p=>p.tingkat==='Musrenbang Kecamatan'&&p.tanggal.startsWith(yr)));
+ const ringkas=i=>esc(firstSent((i.final||'').replace(/^Ayah Bunda[^.]*\.\s*/,''))||firstSent(i.masalah));
+ const lastInfo=i=>{const t=i.tindakLanjut.at(-1),f=(i.followup||[]).at(-1);if(t&&(!f||t.tanggal>=f.tanggal))return `${fmt(t.tanggal)}: ${esc(t.info)}`;if(f)return `${fmt(f.tanggal)}: ditanyakan ke ${esc(f.pihak)}, menunggu jawaban`;return '<span class="muted">Belum ada informasi</span>'};
+ const catatan=(state.lapCatatan||{})[yr]||'';
+ const isAdmin=role==='admin';
+ return `<div class="no-print">
+  <div class="row"><div><h1>Laporan</h1><p class="sub" style="margin-bottom:0">Rekap aspirasi untuk diserahkan ke DP3A. Pilih periode, periksa, lalu cetak atau simpan sebagai PDF.</p></div><div class="spacer"></div>
+   <label class="small muted">Periode <select class="in" id="lapYr" style="width:auto;display:inline-block">${years.map(y=>`<option ${y===yr?'selected':''}>${y}</option>`).join('')}</select></label>
+   <label class="small muted">Rincian <select class="in" id="lapDet" style="width:auto;display:inline-block"><option value="semua" ${lapDetail==='semua'?'selected':''}>Semua aspirasi terverifikasi</option><option value="prioritas" ${lapDetail==='prioritas'?'selected':''}>Hanya aspirasi prioritas</option><option value="tidak" ${lapDetail==='tidak'?'selected':''}>Tanpa rincian</option></select></label>
+   <label class="small muted"><input type="checkbox" id="lapFt" ${lapFoto?'checked':''}> Sertakan foto</label>
+   <button class="btn" data-action="copyCsv" data-which="kec">Salin CSV</button>
+   <button class="btn pri" data-action="printLap">🖨️ Cetak / Simpan PDF</button></div>
+  ${isAdmin?`<div class="card sec"><label class="f" style="margin-top:0">Catatan pengantar dari Admin (ikut tercetak)</label><textarea id="lapCat" style="min-height:70px" placeholder="mis. Laporan ini merangkum aspirasi anak yang dihimpun Forum Anak Kota Kendari selama tahun ${yr}...">${esc(catatan)}</textarea><div class="row" style="margin-top:8px"><button class="btn sm" data-action="saveCat">Simpan catatan</button><span class="tiny">Pastikan isi laporan sudah benar sebelum diserahkan.</span></div></div>`:''}
+  <p class="tiny sec">Pratinjau laporan:</p>
+ </div>
+ <div id="laporan" class="card">
+  <div class="kop"><div class="logo"><div class="mark">FAK</div><div><b style="font-size:17px">Forum Anak Kota Kendari</b><small>Laporan Rekap Aspirasi Anak</small></div></div>
+   <dl class="kv" style="margin-top:12px"><dt>Periode</dt><dd>Tahun ${yr}</dd><dt>Disusun oleh</dt><dd>${esc(isAdmin?roleLabel():'Admin Forum Anak Kota Kendari')}</dd><dt>Tanggal</dt><dd>${fmt(today())}</dd><dt>Ditujukan kepada</dt><dd>DP3A Kota Kendari</dd></dl></div>
+  ${catatan?`<div class="sec"><h3>Pengantar</h3><p style="white-space:pre-wrap;margin:0">${esc(catatan)}</p></div>`:''}
+
+  <h2 class="sec">A. Ringkasan</h2>
+  <div class="grid g4 lap-tiles">
+   <div class="tile"><div class="n">${act.length}</div><div class="l">Aspirasi masuk</div></div>
+   <div class="tile"><div class="n">${disampaikan}</div><div class="l">Sudah disampaikan</div></div>
+   <div class="tile"><div class="n">${cnt(['Terlaksana'])}</div><div class="l">Terlaksana</div></div>
+   <div class="tile"><div class="n">${cnt(['Sebagian Terlaksana','Dalam Proses'])}</div><div class="l">Sebagian / dalam proses</div></div>
+  </div>
+  <p class="small">${cnt(['Belum Dapat Ditindaklanjuti'])} aspirasi belum dapat ditindaklanjuti · ${cnt(['Diterima','Perlu Informasi','Terverifikasi'])} masih diolah Forum Anak${sens.length?` · ${sens.length} aspirasi sensitif telah dirujuk melalui fasilitator (isi tidak dimuat)`:''}</p>
+
+  <h2 class="sec">B. Rekap per klaster hak anak</h2>
+  <table><tr><th>Klaster</th><th>Masuk</th><th>Disampaikan</th><th>Terlaksana</th><th>Aspirasi prioritas</th></tr>
+  ${KLASTER.map(k=>{const its=act.filter(i=>i.klaster===k.id);const p=its.filter(i=>i.prioritas);return `<tr><td><b>${k.nama}</b><div class="small muted">${esc(k.judul)}</div></td><td>${its.length}</td><td>${its.filter(i=>i.penyampaian.length).length}</td><td>${its.filter(i=>i.status==='Terlaksana').length}</td><td class="small">${p.length?p.map(ringkas).join('<br>'):'<span class="muted">-</span>'}</td></tr>`}).join('')}
+  ${act.some(i=>!i.klaster)?`<tr><td class="muted">Belum dikonfirmasi</td><td>${act.filter(i=>!i.klaster).length}</td><td colspan="3"></td></tr>`:''}
+  </table>
+
+  <h2 class="sec">C. Rekap per kecamatan</h2>
+  <table><tr><th>Kecamatan</th><th>Masuk</th><th>Forum Anak hadir di Musrenbang Kecamatan</th><th>Terlaksana</th></tr>
+  ${KEC.map(k=>{const its=act.filter(i=>i.kecamatan===k);return `<tr><td>${k}</td><td>${its.length}</td><td>${hadir(k)?'✓ Hadir':'<span class="muted">Belum tercatat</span>'}</td><td>${its.filter(i=>i.status==='Terlaksana').length}</td></tr>`}).join('')}
+  </table>
+  <p class="small">${KEC.filter(hadir).length} dari ${KEC.length} kecamatan tercatat dihadiri Forum Anak di Musrenbang Kecamatan.</p>
+
+  <h2 class="sec">D. Status tindak lanjut aspirasi prioritas</h2>
+  ${prior.length?`<table><tr><th>Aspirasi</th><th>Disampaikan</th><th>Perkembangan terakhir</th><th>Bukti</th><th>Status</th></tr>
+  ${prior.map(i=>{const p=i.penyampaian.at(-1),b=i.tindakLanjut.filter(t=>t.bukti).at(-1);return `<tr><td><b>${ringkas(i)}</b><div class="small muted">${i.klaster?KLASTER.find(k=>k.id===i.klaster).nama:'-'} · Kec. ${esc(i.kecamatan)}</div></td><td class="small">${p?`${esc(p.tingkat)}<br>${fmt(p.tanggal)}`:'-'}</td><td class="small">${lastInfo(i)}</td><td class="small">${b?esc(b.bukti):'<span class="muted">-</span>'}</td><td>${badge(i.status)}</td></tr>`}).join('')}</table>`:'<p class="muted">Belum ada aspirasi yang ditandai prioritas. Admin dapat menandainya di halaman detail aspirasi.</p>'}
+
+  ${lapDetail!=='tidak'?(()=>{const VER=['Diterima','Perlu Informasi'];const det=act.filter(i=>!VER.includes(i.status)&&(lapDetail==='semua'||i.prioritas)).sort((a,b)=>((a.klaster||9)-(b.klaster||9))||a.dibuat.localeCompare(b.dibuat));
+   const fotoOk=f=>lapFoto&&f&&f.length;
+   return `<h2 class="sec">E. Rincian aspirasi</h2>
+   <p class="small muted" style="margin-top:-4px">${det.length} aspirasi ${lapDetail==='prioritas'?'prioritas ':''}yang sudah diverifikasi, diurutkan per klaster. Nama, sekolah, dan kontak anak tidak dimuat.</p>
+   ${det.length?det.map((i,n)=>{const kl=i.klaster?KLASTER.find(k=>k.id===i.klaster):null;const pen=i.penyampaian;const tl=i.tindakLanjut;const fBukti=tl.flatMap(t=>t.foto||[]);
+    return `<div class="lap-item"><div class="hd"><div><b>${n+1}. ${ringkas(i)}</b><div class="small muted">${i.id} · ${kl?esc(kl.nama+' — '+kl.judul):'Klaster belum dikonfirmasi'}</div></div>${badge(i.status)}</div>
+    <dl class="kv">
+     <dt>Tanggal masuk</dt><dd>${fmt(i.dibuat)}</dd>
+     <dt>Kecamatan</dt><dd>${esc(i.kecamatan||'-')}</dd>
+     <dt>Asal aspirasi</dt><dd>${esc(i.asal||'-')}</dd>
+     <dt>Isi aspirasi</dt><dd style="white-space:pre-wrap">${esc(i.final||i.masalah||'-')}</dd>
+     ${i.usulan&&!i.final?`<dt>Usulan anak</dt><dd>${esc(i.usulan)}</dd>`:''}
+     <dt>Disampaikan</dt><dd>${pen.length?pen.map(p=>`${esc(p.tingkat)}, ${fmt(p.tanggal)}${p.pihak?` · follow up ke ${esc(p.pihak)}`:''}`).join('<br>'):'<span class="muted">Belum disampaikan</span>'}</dd>
+     <dt>Tindak lanjut</dt><dd>${tl.length?tl.map(t=>`${fmt(t.tanggal)}: ${esc(t.info)}`).join('<br>'):lastInfo(i)}</dd>
+     <dt>Bukti</dt><dd>${tl.filter(t=>t.bukti).map(t=>esc(t.bukti)).join('<br>')||'<span class="muted">-</span>'}</dd>
+    </dl>
+    ${fotoOk(i.foto)?`<div class="small muted" style="margin-top:8px">Foto dari aspirasi:</div><div class="thumbs">${i.foto.slice(0,3).map(f=>`<img src="${f}" alt="foto aspirasi">`).join('')}</div>`:''}
+    ${fotoOk(fBukti)?`<div class="small muted" style="margin-top:8px">Foto bukti tindak lanjut:</div><div class="thumbs">${fBukti.slice(0,3).map(f=>`<img src="${f}" alt="foto bukti">`).join('')}</div>`:''}
+    </div>`}).join(''):'<p class="muted">Tidak ada aspirasi yang sesuai pilihan rincian.</p>'}`})():''}
+
+  <h2 class="sec">${lapDetail!=='tidak'?'F':'E'}. Lampiran kegiatan</h2>
+  ${keg.length?`<table><tr><th>Tanggal</th><th>Kegiatan</th><th>Dokumentasi</th></tr>${keg.map(k=>`<tr><td class="small">${fmt(k.tanggal)}</td><td><b>${esc(k.nama)}</b><div class="small muted">${esc(k.jenis)}${k.peserta?' · '+esc(k.peserta):''}</div></td><td class="small">${k.dokumen.map(d=>esc(d.nama)).join(', ')||'-'}${k.izin===IZIN[1]&&k.foto.length?`<div class="thumbs">${k.foto.slice(0,3).map(f=>`<img src="${f}" alt="foto kegiatan">`).join('')}</div>`:(k.foto.length?'<div class="muted">Foto tidak dilampirkan (belum ada izin publikasi)</div>':'')}</td></tr>`).join('')}</table>`:'<p class="muted">Tidak ada kegiatan pada periode ini.</p>'}
+
+  <p class="tiny sec" style="border-top:1px solid var(--line);padding-top:10px">Laporan ini disusun dari Sistem Arsip dan Pemantauan Aspirasi Forum Anak Kota Kendari. Identitas anak tidak dimuat. Aspirasi sensitif hanya dihitung jumlahnya. Foto yang menampilkan wajah anak hanya dimuat jika ada izin. Aspirasi duplikat atau bukan aspirasi tidak dihitung.</p>
+ </div>`;
+}
+
+/* ---------- templates ---------- */
+function tplModal(title,text,note){
+ modal(`<h2>${esc(title)}</h2>${note?`<p class="small muted">${note}</p>`:''}<textarea id="tplText" style="min-height:260px">${esc(text)}</textarea>
+ <div class="row" style="margin-top:10px"><button class="btn pri" data-action="copyTpl">Salin pesan</button><button class="btn" data-action="close">Tutup</button></div>`);
+}
+function tplFollowText(it,pihak){
+ const p=it.penyampaian.at(-1);
+ const ring=it.final?firstSent(it.final.replace(/^Ayah Bunda[^.]*\.\s*/,'')):firstSent(it.masalah);
+ const dp3a=pihak.startsWith('DP3A');
+ const nama=(role==='anak'?'[nama pengurus]':roleLabel().replace(/\s*\(.*\)/,''));
+ let s=`Assalamualaikum / Selamat pagi, Ayah Bunda di ${pihak}.\n\nKami dari Forum Anak Kota Kendari ingin menanyakan perkembangan aspirasi anak yang kami sampaikan pada ${p?`${p.tingkat} (${p.lokasi}), ${fmt(p.tanggal)}`:'Musrenbang'}:\n• Aspirasi: ${ring}\n• Kecamatan: ${it.kecamatan}`;
+ if(dp3a&&p&&p.instansi)s+=`\n\nAspirasi ini berkaitan dengan ${p.instansi}. Mohon bantuan Ayah Bunda untuk menanyakan perkembangannya kepada pihak terkait.`;
+ s+=`\n\nApakah sudah ada informasi tindak lanjutnya? Jika ada dokumentasi, kami sangat berterima kasih bila Ayah Bunda berkenan membagikannya.\n\nTerima kasih atas perhatian Ayah Bunda.\nSalam,\n${nama}\nForum Anak Kota Kendari`;
+ return s;
+}
+function tplFollowModal(it){
+ const opts=pihakOpts(it.penyampaian.at(-1).tingkat,it.kecamatan),cur=pihakNow(it);
+ modal(`<h2>Tanya perkembangan ${esc(it.id)}</h2><p class="small muted">Salin, lalu kirim lewat WhatsApp atau email. Setelah itu klik <b>Catat sudah ditanyakan</b> supaya pengingat diperbarui dan pengurus lain tahu.</p>
+ <label class="f">Ditujukan ke</label><select class="in" id="tplPihak" data-id="${it.id}">${opts.map(o=>`<option ${o===cur?'selected':''}>${esc(o)}</option>`).join('')}</select>
+ <textarea id="tplText" style="min-height:260px;margin-top:10px">${esc(tplFollowText(it,opts.includes(cur)?cur:opts[0]))}</textarea>
+ <div class="row" style="margin-top:10px"><button class="btn pri" data-action="copyTpl">Salin pesan</button>${role!=='fasilitator'?`<button class="btn" data-action="logAskQuick" data-id="${it.id}">Catat sudah ditanyakan hari ini</button>`:''}<button class="btn" data-action="close">Tutup</button></div>`);
+}
+function tplInfo(it){
+ const nm=(it.nama||'').replace(/\s*\(contoh\)/,'')||'teman';
+ return `Halo ${nm}, terima kasih sudah menyampaikan aspirasimu ke Forum Anak Kota Kendari 😊\n\nSupaya aspirasimu (nomor ${it.id}) bisa kami sampaikan dengan jelas, boleh kami tahu lebih lanjut tentang:\n- [hal yang perlu dilengkapi, mis. lokasi persisnya atau sejak kapan terjadi]\n\nSalam,\n[nama pengurus]\nForum Anak Kota Kendari`;
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click',async e=>{
+ const el=e.target.closest('[data-action]');if(!el)return;
+ const a=el.dataset.action, id=el.dataset.id, it=id?get(id):null;
+ if(el.tagName==='A')e.preventDefault();
+ switch(a){
+  case 'go':view=el.dataset.view;detailId=null;render();window.scrollTo(0,0);break;
+  case 'open':view='detail';detailId=id;render();window.scrollTo(0,0);break;
+  case 'susunInput':{const m=$('#iMasalah').value.trim();if(!m){toast('Tulis cerita anak dulu');break}
+   $('#iDraf').value=aiRapikan({masalah:m,usulan:$('#iUsulan').value.trim(),kecamatan:$('#iKec').value});toast('Draf disusun. Periksa apakah masih sesuai maksud anak.');break}
+  case 'openKeg':view='kegiatanDetail';kegId=id;render();window.scrollTo(0,0);break;
+  case 'reset':modal(`<h2>Reset data contoh?</h2><p>Semua aspirasi yang kamu tambahkan akan hilang dan data kembali ke contoh awal.</p><div class="row"><button class="btn dan" data-action="doReset">Ya, reset</button><button class="btn" data-action="close">Batal</button></div>`);break;
+  case 'doReset':state=seed();save();chatLog=[];closeModal();view=NAV[role][0][0];render();toast('Data dikembalikan ke contoh awal');break;
+  case 'close':closeModal();break;
+  case 'classify':it.klasterAI=classify(it);addHist(it,it.status,'Klasifikasi AI dijalankan (rekomendasi: '+KLASTER.find(k=>k.id===it.klasterAI.top[0].k).nama+').');save();render();break;
+  case 'setKl':{const v=Number($('#klSel').value);if(!v){toast('Pilih klaster dulu');break}it.klaster=v;addHist(it,it.status,'Klaster dikonfirmasi: '+klName(v));save();render();toast('Klaster disimpan');break}
+  case 'ringkas':it.ringkas=aiRingkas(it);it.rapikan='';save();render();break;
+  case 'rapikan':it.rapikan=aiRapikan(it);save();render();break;
+  case 'setFinal':{const v=$('#aiOut').value.trim();if(!v){toast('Belum ada teks');break}it.final=v;addHist(it,it.status,'Versi final untuk Musrenbang disetujui.');save();render();toast('Versi final disimpan');break}
+  case 'verify':if(it.inputOleh===acct){toast('Tidak bisa memverifikasi aspirasi yang kamu input sendiri');break}if(!it.klaster){toast('Konfirmasi klaster dulu sebelum verifikasi');break}it.status='Terverifikasi';addHist(it,'Terverifikasi','');
+   if(it.penyampaian.length){it.status='Disampaikan';addHist(it,'Disampaikan','Sudah disampaikan sebelumnya ('+it.penyampaian.at(-1).tingkat+'); pemantauan dimulai.')}save();render();break;
+  case 'needInfo':it.status='Perlu Informasi';addHist(it,'Perlu Informasi','');save();render();if(it.kontak)tplModal('Minta informasi tambahan',tplInfo(it),'Kirim lewat WhatsApp ke '+esc(it.kontak)+'.');break;
+  case 'archive':modal(`<h2>Arsipkan ${it.id}</h2><label class="f">Alasan</label><select class="in" id="arR"><option>Duplikat</option><option>Digabung dengan aspirasi lain</option><option>Tidak relevan</option></select><div class="row" style="margin-top:12px"><button class="btn dan" data-action="doArchive" data-id="${it.id}">Arsipkan</button><button class="btn" data-action="close">Batal</button></div>`);break;
+  case 'doArchive':it.status='Diarsipkan';addHist(it,'Diarsipkan',$('#arR').value);save();closeModal();render();break;
+  case 'printLap':try{window.print()}catch(err){toast('Cetak tidak tersedia di sini. Buka versi GitHub Pages.')}break;
+  case 'saveCat':state.lapCatatan=state.lapCatatan||{};state.lapCatatan[lapTahun]=$('#lapCat').value;save();render();toast('Catatan pengantar disimpan');break;
+  case 'togglePrior':it.prioritas=!it.prioritas;addHist(it,it.status,it.prioritas?'Ditandai sebagai aspirasi prioritas.':'Tidak lagi menjadi aspirasi prioritas.');save();render();break;
+  case 'mode':mode=el.dataset.m;setRole();view=NAV[role][0][0];detailId=null;render();toast(mode==='admin'?'Mode Admin: mengelola dan memverifikasi':'Mode Pengurus: input, follow-up, dan Musrenbang');break;
+  case 'askSens':modal(`<h2>Tandai ${it.id} sebagai sensitif?</h2><p>Gunakan kalau aspirasi berisi indikasi kekerasan, eksploitasi, atau ancaman terhadap anak.</p>
+   <div class="alert dan">Jangan ceritakan isi aspirasi ini ke orang lain. Fasilitator akan menindaklanjuti bersama pihak yang berwenang.</div>
+   ${role==='pengurus'?'<p class="small muted">Setelah ditandai, isinya hanya bisa dibuka Admin dan Fasilitator, termasuk tidak bisa kamu buka lagi.</p>':''}
+   <div class="row"><button class="btn dan" data-action="doSens" data-id="${it.id}">Ya, tandai sensitif</button><button class="btn" data-action="close">Batal</button></div>`);break;
+  case 'doSens':it.sensitif=true;it.sensitifOleh=acct;it.sensitifTgl=today();addHist(it,it.status,'Ditandai sensitif. Akses dibatasi, fasilitator diberi notifikasi.');save();closeModal();render();toast('Ditandai sensitif. Fasilitator sudah diberi tahu.');break;
+  case 'unSens':it.sensitif=false;addHist(it,it.status,'Tanda sensitif dihapus.');save();render();break;
+  case 'addPenyampaian':{const tg=$('#pTg').value;if(!tg){toast('Isi tanggal');break}it.penyampaian.push({tingkat:$('#pTk').value,tanggal:tg,lokasi:$('#pLk').value,penyampai:roleLabel(),peran:$('#pPr').value,catatan:$('#pCt').value,pihak:$('#pPh').value,instansi:$('#pIn').value.trim()});if(it.status==='Terverifikasi'){it.status='Disampaikan';addHist(it,'Disampaikan',$('#pTk').value+'.')}else addHist(it,it.status,'Disampaikan lagi di '+$('#pTk').value+'.');save();render();toast('Penyampaian dicatat. Pengingat dihitung 30 hari dari tanggal ini.');break}
+  case 'setJenis':it.jenisTL=$('#jenisSel').value;save();render();toast('Jenis tindak lanjut disimpan');break;
+  case 'addTL':{const st=$('#tSt').value,info=$('#tIn').value.trim(),bk=$('#tBk').value.trim();if(!info){toast('Isi informasi tindak lanjut');break}
+   if(st==='Terlaksana'&&!bk){toast('Status Terlaksana wajib disertai keterangan bukti');break}
+   if(st==='Terlaksana'&&!it.jenisTL){toast('Pilih jenis tindak lanjut dulu');break}
+   const foto=await readImages($('#tFt').files);it.tindakLanjut.push({tanggal:$('#tTg').value||today(),info,bukti:bk,foto});
+   if(it.status!==st){it.status=st;addHist(it,st,info)}else addHist(it,st,'Update: '+info);save();render();toast('Tindak lanjut dicatat');break}
+  case 'addFas':{const v=$('#fasIn').value.trim();if(!v)break;it.catatanFasil.push({t:today(),c:v});save();render();break}
+  case 'tplFollow':tplFollowModal(it);break;
+  case 'claim':it.pj=roleLabel();addHist(it,it.status,'Penanggung jawab follow-up: '+it.pj);save();render();toast('Tugas follow-up diambil');break;
+  case 'logAsk':{it.followup.push({tanggal:$('#fTg').value||today(),pihak:$('#fPh').value,oleh:roleLabel(),catatan:$('#fCt').value.trim()});if(!it.pj)it.pj=roleLabel();save();render();toast('Tercatat. Pengingat berikutnya 30 hari lagi.');break}
+  case 'logAskQuick':{const ph=$('#tplPihak').value;it.followup.push({tanggal:today(),pihak:ph,oleh:roleLabel(),catatan:''});if(!it.pj)it.pj=roleLabel();save();closeModal();render();toast('Tercatat sudah ditanyakan ke '+ph);break}
+  case 'tplInfo':tplModal('Minta informasi tambahan',tplInfo(it),'Kirim lewat WhatsApp ke '+esc(it.kontak)+'.');break;
+  case 'copyTpl':copyText($('#tplText'));break;
+  case 'edit':modal(`<h2>Edit data ${it.id}</h2>
+   <div class="grid g2"><div><label class="f">Nama</label><input type="text" id="eNama" value="${esc(it.nama)}"></div><div><label class="f">Asal sekolah / kelurahan</label><input type="text" id="eSek" value="${esc(it.sekolah)}"></div>
+   <div><label class="f">Kecamatan</label><select class="in" id="eKec"><option value="">Pilih…</option>${KEC.map(k=>`<option ${it.kecamatan===k?'selected':''}>${k}</option>`).join('')}</select></div><div><label class="f">Kontak</label><input type="text" id="eKon" value="${esc(it.kontak)}"></div></div>
+   <label class="f">Masalah</label><textarea id="eMas">${esc(it.masalah)}</textarea><label class="f">Usulan</label><textarea id="eUsu" style="min-height:60px">${esc(it.usulan)}</textarea>
+   ${it.teksAsli?`<details><summary class="small">Pesan asli</summary><div class="textbox">${esc(it.teksAsli)}</div></details>`:''}
+   <div class="row" style="margin-top:12px"><button class="btn pri" data-action="doEdit" data-id="${it.id}">Simpan</button><button class="btn" data-action="close">Batal</button></div>`);break;
+  case 'doEdit':Object.assign(it,{nama:$('#eNama').value,sekolah:$('#eSek').value,kecamatan:$('#eKec').value,kontak:$('#eKon').value,masalah:$('#eMas').value,usulan:$('#eUsu').value});if(it.kecamatan&&it.masalah)it.perluRapikan=false;addHist(it,it.status,'Data dirapikan.');save();closeModal();render();break;
+  case 'copyCsv':{let csv;const act=state.items.filter(i=>i.status!=='Diarsipkan');
+   if(el.dataset.which==='kec'){csv='Kecamatan,Diperiksa,Dipantau,Terlaksana,Belum dapat,Total\n'+KEC.map(k=>{const its=act.filter(i=>i.kecamatan===k);if(!its.length)return null;const c=s=>its.filter(i=>s.includes(i.status)).length;return [k,c(['Diterima','Perlu Informasi','Terverifikasi']),c(PANTAU),c(['Terlaksana']),c(['Belum Dapat Ditindaklanjuti']),its.length].join(',')}).filter(Boolean).join('\n')}
+   else{csv='Klaster,Judul,Aspirasi,Terlaksana\n'+KLASTER.map(k=>[k.nama,'"'+k.judul+'"',act.filter(i=>i.klaster===k.id).length,act.filter(i=>i.klaster===k.id&&i.status==='Terlaksana').length].join(',')).join('\n')}
+   modal(`<h2>CSV laporan</h2><textarea id="tplText" style="min-height:200px;font-family:monospace">${esc(csv)}</textarea><div class="row" style="margin-top:10px"><button class="btn pri" data-action="copyTpl">Salin</button><button class="btn" data-action="close">Tutup</button></div>`);break}
+ }
+});
+function copyText(ta){
+ try{navigator.clipboard.writeText(ta.value).then(()=>toast('Disalin ke clipboard')).catch(()=>{ta.select();toast('Teks sudah dipilih, tekan Ctrl/Cmd+C')})}catch(err){ta.select();toast('Teks sudah dipilih, tekan Ctrl/Cmd+C')}
+}
+document.addEventListener('submit',async e=>{
+ if(e.target.id==='chatForm')return handleChatSubmit(e);
+ if(e.target.id==='kegForm'){e.preventDefault();
+  const nama=$('#kNama').value.trim(),tg=$('#kTg').value,jenis=$('#kJenis').value,kec=$('#kKec').value;
+  if(!nama||!tg){toast('Nama dan tanggal kegiatan wajib diisi');return}
+  if(jenis==='Musrenbang Kecamatan'&&!kec){toast('Pilih kecamatan untuk Musrenbang Kecamatan');return}
+  const foto=await readImages($('#kFoto').files);const dok=[...$('#kDok').files].map(f=>({nama:f.name}));
+  const ids=[...document.querySelectorAll('.kAsp:checked')].map(c=>c.value);
+  const id='KEG-'+String(++state.kseq).padStart(3,'0');
+  state.kegiatan.push({id,nama,jenis,tanggal:tg,kecamatan:kec,lokasi:$('#kLok').value,peserta:$('#kPes').value,catatan:$('#kCt').value,izin:$('#kIzin').value,foto,dokumen:dok,aspirasi:ids,oleh:roleLabel()});
+  let n=0;
+  if($('#kAuto').checked&&TINGKAT.includes(jenis)){ids.map(get).forEach(it=>{if(!it||['Diarsipkan','Terlaksana','Belum Dapat Ditindaklanjuti'].includes(it.status))return;
+   it.penyampaian.push({tingkat:jenis,tanggal:tg,lokasi:jenis==='Musrenbang Kecamatan'?'Kecamatan '+kec:($('#kLok').value||'Kota Kendari'),penyampai:roleLabel(),peran:'Menyampaikan langsung',catatan:'Dicatat dari kegiatan '+id,pihak:pihakOpts(jenis,it.kecamatan)[0],instansi:''});
+   if(it.status==='Terverifikasi'){it.status='Disampaikan';addHist(it,'Disampaikan',jenis+' ('+id+').')}else addHist(it,it.status,'Penyampaian dicatat: '+jenis+' ('+id+')'+(['Diterima','Perlu Informasi'].includes(it.status)?'. Status menjadi Disampaikan setelah diverifikasi Admin.':'.'));n++})}
+  save();view='kegiatanDetail';kegId=id;render();toast(id+' tersimpan'+(n?`, ${n} penyampaian ikut dicatat`:''));return;
+ }
+ if(e.target.id==='inForm'){e.preventDefault();
+  const kec=$('#iKec').value,mas=$('#iMasalah').value.trim();if(!kec||!mas){toast('Kecamatan dan masalah wajib diisi');return}
+  const foto=await readImages($('#iFoto').files);
+  const id='ASP-'+String(++state.seq).padStart(3,'0');
+  const draf=$('#iDraf').value.trim(),fin=$('#iFinal').checked&&draf;
+  const it={id,sumber:'pengurus',inputOleh:acct,asal:$('#iAsal').value,nama:$('#iNama').value,sekolah:$('#iKel').value,kecamatan:kec,kontak:$('#iKontak').value,masalah:mas,usulan:$('#iUsulan').value.trim(),foto,klasterAI:null,klaster:null,ringkas:'',rapikan:draf,final:fin?draf:'',sensitif:false,perluRapikan:false,jenisTL:'',penyampaian:[],tindakLanjut:[],catatanFasil:[],followup:[],pj:'',dibuat:today(),status:'Diterima',riwayat:[{t:today(),s:'Diterima',oleh:roleLabel(),c:'Diinput pengurus.'+(fin?' Versi final disusun dengan bantuan AI dan sudah diperiksa.':'')}]};
+  if($('#iSudah').checked){const sal=$('#iSal').value,kg=$('#iKeg').value;
+   it.penyampaian.push({tingkat:sal,tanggal:$('#iTgS').value||today(),lokasi:sal==='Musrenbang Kecamatan'?'Kecamatan '+kec:'Kota Kendari',penyampai:roleLabel(),peran:'Menyampaikan langsung',catatan:kg?'Kegiatan '+kg:'',pihak:pihakOpts(sal,kec)[0],instansi:''});
+   it.riwayat.push({t:today(),s:'Diterima',oleh:roleLabel(),c:'Sudah disampaikan lewat '+sal+'. Menunggu verifikasi Admin.'});
+   if(kg){const k=state.kegiatan.find(x=>x.id===kg);if(k&&!k.aspirasi.includes(id))k.aspirasi.push(id)}}
+  state.items.push(it);
+  save();view='detail';detailId=id;render();toast(id+' tersimpan. Menunggu verifikasi Admin.');
+ }
+});
+document.addEventListener('change',async e=>{
+ const t=e.target;
+ if(t.id==='roleSel'){acct=t.value;mode='admin';setRole();view=NAV[role][0][0];detailId=null;render();return}
+ if(t.id==='lapYr'){lapTahun=t.value;render();return}
+ if(t.id==='lapDet'){lapDetail=t.value;render();return}
+ if(t.id==='lapFt'){lapFoto=t.checked;render();return}
+ if(t.id==='pTk'){const it=get(detailId);$('#pPh').innerHTML=pihakOpts(t.value,it&&it.kecamatan).map(o=>`<option>${esc(o)}</option>`).join('');if(t.value==='Musrenbang Kota')$('#pLk').value='Kota Kendari';return}
+ if(t.id==='tplPihak'){const it=get(t.dataset.id);$('#tplText').value=tplFollowText(it,t.value);return}
+ if(t.id==='chatFoto'){const imgs=await readImages(t.files);draftFoto=draftFoto.concat(imgs).slice(0,4);const box=$('#draftThumbs');if(box)box.innerHTML=draftFoto.map(f=>`<img src="${f}" alt="foto">`).join('');if(imgs.length<t.files.length)toast('Hanya JPG/PNG di bawah 8 MB, maksimal 4 foto');return}
+ if(['fkec','fkl','fst'].includes(t.id)){flt.kec=$('#fkec').value;flt.kl=$('#fkl').value;flt.st=$('#fst').value;render()}
+});
+document.addEventListener('input',e=>{
+ if(e.target.id==='fq'){flt.q=e.target.value;const pos=e.target.selectionStart;render();const f=$('#fq');f.focus();f.setSelectionRange(pos,pos)}
+});
+$('#modalBg').addEventListener('click',e=>{if(e.target.id==='modalBg')closeModal()});
+
+render();
+})();
+</script>
+</body>
+</html>
